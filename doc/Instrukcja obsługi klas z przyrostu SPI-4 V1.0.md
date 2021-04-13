@@ -8,9 +8,9 @@ Data: 13.04.2021
 Wersja: 1.0
 <!-- -->
 =========================================
-###Struktura projektu
+### Struktura projektu
 
-####Drzewo struktury projektu
+#### Drzewo struktury projektu
 
  lib\
  |---managers\
@@ -23,17 +23,17 @@ Wersja: 1.0
  |&nbsp; &nbsp;|-------training\_page.dart\
  |---main.dart
 
-####Tworzenie kodu źródłowego
+#### Tworzenie kodu źródłowego
 
 Kod źródłowy tworzymy w katalogu lib, zgodnie ze strukturą
 Fluttera i konwencją Dart:
 [*https://dart.dev/guides/language/effective-dart/style*](https://dart.dev/guides/language/effective-dart/style).
 
-###Odpowiedzialności stworzonych klas
+### Odpowiedzialności stworzonych klas
 
-####Katalog Managers:
+#### Katalog Managers:
 
-#####1. db\_manager.dart
+##### 1. db\_manager.dart
 
 - Jest klasą utworzoną przy pomocy wzorca singleton. Aby
     korzystać ze wszystkich możliwość tej klasy wystarczy
@@ -56,11 +56,11 @@ Fluttera i konwencją Dart:
 - Metoda _getGeolocations, na razie służy do testów i
     pozwala odczytać wszystkie zapisane geolocatory.
 
-#####2. run\_manager.dart
+##### 2. run\_manager.dart
 
 - Zawiera dwie klasy
 
-######2.1.  RunManager
+###### 2.1.  RunManager
  
 - Zbudowany na podstawie wzorca singleton.
 
@@ -90,7 +90,7 @@ Fluttera i konwencją Dart:
     odpowiednim runId. Obserwator jest informowany o
     każdym nowym geolocatorze pobranym ze streama.
 
-######2.2. RunObserver 
+###### 2.2. RunObserver 
 - odpowiedzialny za obserwowanie zmian (nowych geolocatorów) w obiekcie RunManager.
 
 - Stworzony po to aby oddzielić logikę biznesową,
@@ -98,9 +98,9 @@ Fluttera i konwencją Dart:
 
 - Implementowany jest przez trainingPage.
 
-####Katalog Models:
+#### Katalog Models:
 
-#####1. geolocation\_model.dart
+##### 1. geolocation\_model.dart
 
 -  Posiada statyczne atrybuty z nazwami kolumn w
    bazie danych. Chodzi o to, żeby nazwy kolumn z tabeli
@@ -125,15 +125,15 @@ Fluttera i konwencją Dart:
 -  Metoda toString tworzy tekst, który jest
    reprezentacją obiektu.
 
-#####2. run\_model.dart
+##### 2. run\_model.dart
 
 -  Podobnie jak w geolocation_model, poza metodą toString
 
-####Katalog Pages:
+#### Katalog Pages:
 
 -  Tu będziemy trzymać wszystkie widoki stron, np. settings\_page, my\_account\_page, strength\_page itp..
 
-#####1. training\_page.dart
+##### 1. training\_page.dart
 
 -  Implementuje RunObserver, by wiedzieć o zmianach w
    obiekcie RunManager.
