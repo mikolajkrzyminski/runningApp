@@ -4,4 +4,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Rozwiązanie tymczasowe, w wersji produkcyjnej trzeba to obejść
+        https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android
+        -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
