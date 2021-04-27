@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:szewa/pages/exercises_page.dart';
+import 'package:szewa/pages/home_page.dart';
+import 'package:szewa/pages/profile_page.dart';
+import 'package:szewa/pages/social_page.dart';
+import 'package:szewa/pages/statistics_page.dart';
 import 'package:szewa/server_conn/connection.dart';
-
-import 'package:szewa/pages/training_page.dart';
-
 
 void main() {
   runApp(MyApp());
@@ -41,8 +43,14 @@ class _MyAppState extends State<MyApp> {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
       ),
-      home: TrainingPage(),
-      //SidebarLayout()
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/social': (context) => SocialPage(),
+        '/statistics': (context) => StatisticsPage(),
+        '/exercises': (context) => ExercisesPage(),
+        '/profile': (context) => ProfilePage(),
+      }, //SidebarLayout()
     );
   }
 }
