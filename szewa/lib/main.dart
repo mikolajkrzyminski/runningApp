@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:szewa/pages/stats_page.dart';
 
 import 'package:szewa/pages/training_page.dart';
 
@@ -26,8 +27,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
       ),
-      home: TrainingPage(),
-      //SidebarLayout()
+      home: StatsPage(), //TrainingPage()
     );
   }
 }

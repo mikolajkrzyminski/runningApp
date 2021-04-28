@@ -163,7 +163,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(0 != _statsCalculator.avgVelocity ? (1/(_statsCalculator.avgVelocity) * (1/60)).toStringAsFixed(1) : '0',
+                              Text(0 != _statsCalculator.avgVelocity ? (1/(_statsCalculator.avgVelocity) * (50/3)).toStringAsFixed(1) : '0',
                                   style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25)),
                               Text("(min/km)", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12)),
                             ],
