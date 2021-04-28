@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:szewa/pages/exercises_page.dart';
 import 'package:szewa/pages/home_page.dart';
+import 'package:szewa/pages/root_page.dart';
 import 'package:szewa/pages/profile_page.dart';
 import 'package:szewa/pages/social_page.dart';
 import 'package:szewa/pages/statistics_page.dart';
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    serverConnectionTestData();
+    // serverConnectionTestData();
   }
 
   // This widget is the root of your application.
@@ -45,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => RootPage(),
         '/social': (context) => SocialPage(),
         '/statistics': (context) => StatisticsPage(),
         '/exercises': (context) => ExercisesPage(),

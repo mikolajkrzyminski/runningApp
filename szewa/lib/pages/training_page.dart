@@ -27,8 +27,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Center(
         child: Stack(
           children: [
             Column(
@@ -78,26 +77,25 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                 },
               ),
             ),
-            Container(
-              alignment: Alignment.topCenter,
-              padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              height: 100,
-              decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.circular(0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      spreadRadius: 2,
-                      offset: Offset(0, 0),
-                    ),
-                  ]
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.topCenter,
+            //   padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
+            //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            //   height: 100,
+            //   decoration: BoxDecoration(
+            //       color: Colors.blueGrey,
+            //       borderRadius: BorderRadius.circular(0),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.black.withOpacity(0.4),
+            //           spreadRadius: 2,
+            //           offset: Offset(0, 0),
+            //         ),
+            //       ]
+            //   ),
+            // ),
           ],
         ),
-      ),
     );
   }
 
