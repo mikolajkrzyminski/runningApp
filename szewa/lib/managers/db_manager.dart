@@ -17,18 +17,12 @@ class DbManager {
   }
 
   DbManager._DbManager() {
-    getDatabasesPath().then((value) {
-      _databasePath = join(value, 'szewa.db');
-      _open();
-    });
+    _database = _open();
   }
 
-  void _open() async {
-
-    _delete();
-
-    _database = openDatabase(
-      _databasePath,
+  Future<Database> _open() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'szewa.db'),
       onCreate: (db, version) {
         _createTables(db);
       },
@@ -73,21 +67,43 @@ class DbManager {
     );
   }
 
-  Future<List<GeolocationModel>> _getGeolocations() async {
+  Future<List<GeolocationModel>> getGeolocations() async {
     // Get a reference to the database.
     final Database db = await _database;
     // Query the table for all The Runs.
-    final List<Map<String, dynamic>> maps = await db.query(GeolocationModel.tableName);
-    // Convert the List<Map<String, dynamic> into a List<RunModel>.
-    return List.generate(maps.length, (i) {
-      return GeolocationModel.fromMap(maps[i]);
-    });
+    final List<Map<String, dynamic>> geolocators = await db.query(GeolocationModel.tableName);
+    if (geolocators.isNotEmpty) {
+      // Convert the List<Map<String, dynamic> into a List<GeolocationModel>.
+      return List.generate(geolocators.length, (i) {
+        return GeolocationModel.fromMap(geolocators[i]);
+      });
+    } else return [];
+  }
+
+  Future<List<RunModel>> getRuns() async {
+    // Get a reference to the database.
+    final Database db = await _database;
+    // Query the table for all The Runs.
+    final List<Map<String, dynamic>> runs = await db.query(RunModel.tableName);
+    if (runs.isNotEmpty) {
+      // Convert the List<Map<String, dynamic> into a List<RunModel>.
+      return List.generate(runs.length, (i) {
+        return RunModel.fromMap(runs[i]);
+      });
+    } else return [];
   }
 
   void printRuns() async {
     print('----------------');
-    List<GeolocationModel> runs = await _getGeolocations();
+    List<GeolocationModel> geolocators = await getGeolocations();
     int index = 0;
+    geolocators.forEach((element) {
+      print('$index: ${element.toString()}');
+      index ++;
+    });
+    print('----------------');
+    List<RunModel> runs = await getRuns();
+    index = 0;
     runs.forEach((element) {
       print('$index: ${element.toString()}');
       index ++;
@@ -122,6 +138,12 @@ class DbManager {
     final Database db = await _database;
     return Sqflite
         .firstIntValue(await db.rawQuery('SELECT MAX(${RunModel.fldId}) from ${RunModel.tableName}'));
+  }
+
+  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories) async {
+    Database db = await _database;
+    String updateStatement = RunModel.getUpdateString(id, distance, avgVelocity, calories);
+    await db.execute(updateStatement, );
   }
 
 }

@@ -27,25 +27,23 @@ class RunManager {
     _isRunning = false;
   }
 
-  void changeState() async {
-    _isRunning = !_isRunning;
-    if (_isRunning) {
-      _startRun(DateTime.now().millisecondsSinceEpoch);
-    } else {
-      _endRun();
-    }
-  }
-
   bool getIsRunning() {
     return _isRunning;
   }
 
-  void _startRun(int dateTime) async {
-    _runId = await _dbManager.addRun(dateTime, "Test desc");
-    _startStream();
+  int getId() {
+    return _runId;
   }
 
-  void _endRun() {
+  void startRun(int dateTime) async {
+    _isRunning = !_isRunning;
+    _runId = await _dbManager.addRun(dateTime, "Test desc");
+    await _startStream();
+  }
+
+  void endRun(int id, double distance, double avgVelocity, int calories) {
+    _isRunning = !_isRunning;
+    _dbManager.updateRunInfo(id, distance, avgVelocity, calories);
     _positionStream.cancel();
     _runId = null;
     _dbManager.printRuns();
