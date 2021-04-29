@@ -48,6 +48,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+
                 Flexible(
                   child: FlutterMap(
                     mapController: _mapController,

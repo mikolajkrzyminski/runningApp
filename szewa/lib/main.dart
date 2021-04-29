@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:szewa/server_conn/connection.dart';
 import 'package:szewa/pages/stats_page.dart';
 
 import 'package:szewa/pages/training_page.dart';
@@ -7,7 +8,20 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget{
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    serverConnectionTestData();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
