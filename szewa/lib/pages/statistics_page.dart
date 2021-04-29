@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:szewa/components/navbar/bottom_nav_bar.dart';
+import 'package:szewa/pages/stats_page.dart';
 
 class StatisticsPage extends StatefulWidget{
 
@@ -16,8 +16,7 @@ class _StatisticsPageState  extends State<StatisticsPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("STATYSTYKI")),
-      // bottomNavigationBar: BottomNavBar(),
+      body: StatsPage(),
     );
   }
 }
