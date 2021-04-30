@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:szewa/server_conn/connection.dart';
-import 'package:szewa/pages/stats_page.dart';
-
-import 'package:szewa/pages/training_page.dart';
+import 'package:szewa/pages/root_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,8 +15,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    serverConnectionTestData();
+    // super.initState();
+    // serverConnectionTestData();
   }
 
   // This widget is the root of your application.
@@ -41,7 +38,7 @@ class _MyAppState extends State<MyApp> {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
       ),
-      home: StatsPage(), //TrainingPage()
+      home: RootPage(), //TrainingPage()
     );
   }
 }
