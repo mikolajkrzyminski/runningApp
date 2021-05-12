@@ -162,27 +162,58 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
         ),
         Expanded(
           flex: 4,
-          child: FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              center: LatLng(0, 0),
-              zoom: 16,
-            ),
-            layers: [
-              TileLayerOptions(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: ['a', 'b', 'c']),
-              PolylineLayerOptions(
-                polylines: [
-                  Polyline(
-                      points: _runPositions,
-                      strokeWidth: 4.0,
-                      color: Colors.purple),
+          child: Stack(
+            children: <Widget>[
+              FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                center: LatLng(0, 0),
+                zoom: 16,
+              ),
+              layers: [
+                TileLayerOptions(
+                    urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    subdomains: ['a', 'b', 'c']),
+                PolylineLayerOptions(
+                  polylines: [
+                    Polyline(
+                        points: _runPositions,
+                        strokeWidth: 4.0,
+                        color: Colors.purple),
+                    ],
+                  ),
                 ],
               ),
+              Container(
+                alignment: Alignment.bottomRight,
+                margin: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+                child: StreamBuilder<MapEvent>(
+                  stream: _mapController.mapEventStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<MapEvent> snapshot) {
+                    if (snapshot.hasData) {
+                      if (MapEventSource.onDrag == snapshot.data.source && _isFollowing) {
+                        _isFollowing =  false;
+                      }
+                    }
+                    return Visibility (
+                      visible: !_isFollowing,
+                      child: IconButton(
+                          icon: Icon(Icons.gps_fixed, color: Color(0xFF64C4ED), ),
+                          onPressed: () {
+                            setState(() {
+                              if(_runPositions.isNotEmpty) _mapController.move(_runPositions[_runPositions.length - 1], _mapController.zoom);
+                              _isFollowing = !_isFollowing;
+                            });
+                          },
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
-          ),
+          )
         ),
         Expanded(
           flex: 2,
