@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:szewa/models/geolocation_model.dart';
 import 'package:szewa/models/run_model.dart';
@@ -139,11 +141,17 @@ class DbManager {
     return Sqflite
         .firstIntValue(await db.rawQuery('SELECT MAX(${RunModel.fldId}) from ${RunModel.tableName}'));
   }
-
-  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories) async {
+/*
+  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     Database db = await _database;
-    String updateStatement = RunModel.getUpdateString(id, distance, avgVelocity, calories);
+    String updateStatement = RunModel.getUpdateString(id, distance, avgVelocity, calories, duration, picture);
     await db.execute(updateStatement, );
   }
+ */
+  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
+    Database db = await _database;
 
+    RunModel runModel = RunModel(distance: distance, avgVelocity: avgVelocity, calories: calories, duration: duration, picture: picture);
+    await db.update(RunModel.tableName, runModel.toMapUpdate(), where: '${RunModel.fldId} = $id');
+  }
 }

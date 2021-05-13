@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:szewa/managers/run_manager.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -200,7 +201,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                     return Visibility (
                       visible: !_isFollowing,
                       child: IconButton(
-                          icon: Icon(Icons.gps_fixed, color: Color(0xFF64C4ED), ),
+                          icon: Icon(Icons.gps_fixed, color: Color(0xFF00334E), ),
                           onPressed: () {
                             setState(() {
                               if(_runPositions.isNotEmpty) _mapController.move(_runPositions[_runPositions.length - 1], _mapController.zoom);
@@ -236,21 +237,27 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
             onPressed: () {
               setState(() {
                 if (!_runManager.getIsRunning())
-                //start run
-                {
+
+                { //start run
                   _statsCalculator.clearStats();
                   _timePassed = 0;
                   _runPositions.clear();
                   _stopwatchTimer.onExecute.add(StopWatchExecute.reset);
                   _stopwatchTimer.onExecute.add(StopWatchExecute.start);
                   _runManager.startRun(DateTime.now().millisecondsSinceEpoch);
-                } else {
+                } else { //end run
                   _stopwatchTimer.onExecute.add(StopWatchExecute.stop);
-                  _runManager.endRun(
-                      _runManager.getId(),
-                      _statsCalculator.distance,
-                      _statsCalculator.avgVelocity,
-                      _statsCalculator.calories.round());
+                  _mapController.fitBounds(StatsCalculator.getSquare(_runPositions));
+                  get(Uri.https('a.tile-cyclosm.openstreetmap.fr', '/cyclosm/12/2103/1347.png')).then((value) =>
+                      _runManager.endRun(
+                        _runManager.getId(),
+                        _statsCalculator.distance,
+                        _statsCalculator.avgVelocity,
+                        _statsCalculator.calories.round(),
+                        _timePassed,
+                        value.bodyBytes,
+                      )
+                  );
                 }
               });
             },
