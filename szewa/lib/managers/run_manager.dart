@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:geolocator/geolocator.dart';
 import 'db_manager.dart';
 
@@ -41,9 +42,9 @@ class RunManager {
     await _startStream();
   }
 
-  void endRun(int id, double distance, double avgVelocity, int calories) {
+  void endRun(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
     _isRunning = !_isRunning;
-    _dbManager.updateRunInfo(id, distance, avgVelocity, calories);
+    _dbManager.updateRunInfo(id, distance, avgVelocity, calories, duration, picture);
     _positionStream.cancel();
     _runId = null;
     _dbManager.printRuns();
