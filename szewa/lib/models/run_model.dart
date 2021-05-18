@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class RunModel {
 
   static final String fldId = 'id';
@@ -6,9 +8,21 @@ class RunModel {
   static final String _fldDistance = 'distance';
   static final String _fldAvgVelocity = 'avgVelocity';
   static final String _fldCalories = "calories";
+  static final String _fldDuration = "duration";
+  static final String _fldPicture = "picture";
 
   static String tableName = 'runs';
-  static String createStatement = 'CREATE TABLE $tableName ($fldId INTEGER PRIMARY KEY AUTOINCREMENT, $_fldDateTime INTEGER, $_fldDescription TEXT, $_fldDistance DOUBLE, $_fldAvgVelocity DOUBLE, $_fldCalories INTEGER)';
+  static String createStatement = 'CREATE TABLE $tableName '
+      '('
+      '$fldId INTEGER PRIMARY KEY AUTOINCREMENT, '
+      '$_fldDateTime INTEGER, '
+      '$_fldDescription TEXT, '
+      '$_fldDistance DOUBLE, '
+      '$_fldAvgVelocity DOUBLE, '
+      '$_fldCalories INTEGER, '
+      '$_fldDuration INTEGER, '
+      '$_fldPicture BLOB'
+      ')';
 
   final int id;
   final int dateTime;
@@ -16,6 +30,8 @@ class RunModel {
   final double distance;
   final double avgVelocity;
   final int calories;
+  final int duration;
+  final Uint8List picture;
 
   RunModel({
     this.id,
@@ -24,6 +40,8 @@ class RunModel {
     this.distance,
     this.avgVelocity,
     this.calories,
+    this.duration,
+    this.picture,
   });
 
   RunModel.fromMap(Map<String, dynamic> runMap) :
@@ -32,7 +50,10 @@ class RunModel {
         description = runMap[_fldDescription],
         distance = runMap[_fldDistance],
         avgVelocity = runMap[_fldAvgVelocity],
-        calories = runMap[_fldCalories];
+        calories = runMap[_fldCalories],
+        duration = runMap[_fldDuration],
+        picture = runMap[_fldPicture];
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,14 +63,28 @@ class RunModel {
       _fldDistance: distance,
       _fldAvgVelocity: avgVelocity,
       _fldCalories: calories,
+      _fldDuration: duration,
+      _fldPicture: picture,
     };
   }
 
-  static String getUpdateString(int id, double distance, double avgVelocity, int calories) {
+  Map<String, dynamic> toMapUpdate() {
+    return {
+      _fldDistance: distance,
+      _fldAvgVelocity: avgVelocity,
+      _fldCalories: calories,
+      _fldDuration: duration,
+      _fldPicture: picture,
+    };
+  }
+
+  static String getUpdateString(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
     return 'UPDATE $tableName '
         'SET $_fldDistance = $distance, '
         '$_fldAvgVelocity = $avgVelocity, '
-        '$_fldCalories = $calories '
+        '$_fldCalories = $calories, '
+        '$_fldDuration = $duration, '
+        '$_fldPicture = $picture '
         'WHERE $fldId = $id';
   }
 
@@ -60,7 +95,8 @@ class RunModel {
             '$_fldDescription: $description, '
             '$_fldDistance: $distance, '
             '$_fldAvgVelocity: $avgVelocity, '
-            '$_fldCalories: $calories'
+            '$_fldCalories: $calories, '
+            '$_fldDuration: $duration, '
     );
   }
 

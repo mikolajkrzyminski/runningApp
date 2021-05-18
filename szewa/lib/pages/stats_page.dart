@@ -12,18 +12,20 @@ class _StatsPageState extends State<StatsPage> {
   DbManager _dbManager;
   Future<List<RunModel>> runs;
   DateFormat dateFormat;
+  DateFormat timeFormat;
 
 
   @override
   void initState() {
     _dbManager = DbManager();
     runs = _dbManager.getRuns();
-    dateFormat = DateFormat("HH:mm yyyy-MM-dd ");
+    dateFormat = DateFormat("yyyy.MM.dd ");
+    timeFormat = DateFormat("Hms");
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body : FutureBuilder<List<RunModel>>(
+      body: FutureBuilder<List<RunModel>>(
         future: runs,
         initialData: [],
         builder: (context, snapshot) {
@@ -38,15 +40,91 @@ class _StatsPageState extends State<StatsPage> {
               ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 3,
-                      child: ListTile(
-                        leading: getIcon(snapshot.data[snapshot.data.length - index - 1].avgVelocity),
-                        title: Text("${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[snapshot.data.length - index - 1].dateTime))}"),
-                        subtitle: Text((snapshot.data[snapshot.data.length - index - 1].avgVelocity).toStringAsFixed(2) + " [m/s]"),
+                    return GestureDetector(
+                      onTap: () => print('tapped activity: ${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[snapshot.data.length - index - 1].dateTime))}'),
+                      child: Card(
+                        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        elevation: 3,
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                              child: Stack (
+                                children: [
+                                  Center(
+                                    child: Text(getDayDescription((snapshot.data[snapshot.data.length - index - 1].dateTime)), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                  ),
+                                  getIcon(snapshot.data[snapshot.data.length - index - 1].avgVelocity, ),
+                                ],
+                              ),
+                            ),
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(padding: EdgeInsets.all(4.0),
+                                      child: Text("Run ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w500),),
+                                      ),
+                                      Padding(padding: EdgeInsets.all(4.0),
+                                          child: Text("Distance ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w500),),
+                                      ),
+                                      Padding(padding: EdgeInsets.all(4.0),
+                                          child: Text("Time ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w500),),
+                                      ),
+                                      Padding(padding: EdgeInsets.all(4.0),
+                                          child: Text("Avg Pace ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w500),),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text("${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[snapshot.data.length - index - 1].dateTime))}r.", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text((snapshot.data[snapshot.data.length - index - 1].distance / 1000).toStringAsFixed(2) + " km", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Text("${timeFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[snapshot.data.length - index - 1].duration * 1000))}", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Text((0 == snapshot.data[snapshot.data.length - index - 1].avgVelocity ? 0 : (50 / 3) / snapshot.data[snapshot.data.length - index - 1].avgVelocity).toStringAsFixed(2) + " min/km", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                      ),
+                                    ]
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: Image(
+                                        image: MemoryImage(snapshot.data[snapshot.data.length - index - 1].picture),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
-                  });
+                  },
+              );
           } else {
             return Text("No data");
           }
@@ -56,11 +134,24 @@ class _StatsPageState extends State<StatsPage> {
   }
   Widget getIcon(double velocity) {
     if (velocity < 1.5) {
-      return Icon(Icons.directions_walk, color: Colors.green,);
+      return Icon(Icons.directions_walk, color: Colors.green, );
     } else if (velocity < 5.5) {
-      return Icon(Icons.directions_run, color: Colors.orange,);
+      return Icon(Icons.directions_run, color: Colors.orange, );
     } else if (velocity >= 5.5) {
-      return Icon(Icons.directions_run, color: Colors.red,);
+      return Icon(Icons.directions_run, color: Colors.red, );
     }
+  }
+
+  String getDayDescription(int timestamp) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String desc = "";
+    if (Duration(days: 7) > DateTime.now().difference(date)) {
+      desc += DateFormat('EEEE').format(date);
+    }
+    if (date.hour >= 5 && date.hour < 12) desc += " morning";
+    if (date.hour >= 12 && date.hour < 18) desc += " afternoon";
+    if (date.hour >= 18 && date.hour < 22) desc += " evening";
+    if (date.hour >= 22 && date.hour < 5)  desc += " night";
+    return desc += " activity";
   }
 }
