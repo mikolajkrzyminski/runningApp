@@ -1,44 +1,34 @@
-import 'dart:io';
-
-import 'dart:typed_data';
-
-// TODO: change to stable version it's only for test
-Future<void> serverConnectionTestData() async {
-
-  HttpClient client = HttpClient();
-
-  HttpClientRequest request = await client.get('178.183.128.112', 7080, '/api/test/all-tests');
-
-  HttpClientResponse response = await request.close();
-  
-  Socket socket = await response.detachSocket();
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:szewa/managers/db_manager.dart';
 
 
-  WebSocket ws = WebSocket.fromUpgradedSocket(
-    socket,
-    serverSide: false,
-  );
+fetchAlbum() async {
 
-  print('Connected to: ${socket.remoteAddress.address}:${socket.remotePort}');
+  final response = await http.get(Uri.http('178.183.128.112:7080', '/api/activity/1'));
 
-  socket.listen(
+  if (response.statusCode == 200) {
+    // Kiedy serwer zwróci 200 OK
+    var js = jsonDecode(response.body);
 
-    // handle data from the server
-        (Uint8List data) {
-      final serverResponse = String.fromCharCodes(data);
-      print('Server: $serverResponse');
-    },
+    // wpisanie pobranej aktywności do lokalnej bazy
+    DbManager _dbManager = DbManager();
 
-    // handle errors
-    onError: (error) {
-      print(error);
-      socket.destroy();
-    },
+    // konwersja daty z string do int
+    String dateStr = js['startTime'];
+    // TODO: źle zamienia daty
+    DateTime date = DateTime.parse(dateStr);
+    int dateTime = date.microsecondsSinceEpoch;
 
-    // handle server ending connection
-    onDone: () {
-      print('Server left.');
-      socket.destroy();
-    },
-  );
+    // dodanie "pustego" biegu
+    int _idRun = await _dbManager.addRun(dateTime, 'From server');
+    // aktualizacja pól, bez przypisania wszystkich wartosci rekord się nie pojawi
+    get(Uri.https('a.tile-cyclosm.openstreetmap.fr', '/cyclosm/12/2103/1347.png')).then((value) => _dbManager.updateRunInfo(_idRun, 0.0, 0.0, 0, 0, value.bodyBytes));
+
+    return jsonDecode(response.body);
+  } else {
+    // Kiedy pojawi sie bład w połączeniu
+    throw Exception('Failed to load data');
+  }
 }
