@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:szewa/pages/root_page.dart';
-import 'package:szewa/server_conn/connection.dart';
+import 'package:szewa/server_conn/connection_get_activity.dart';
+import 'package:szewa/server_conn/connection_post_activity.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +17,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    fetchAlbum();
+    fetchActivity();
+    sendActivity();
     // super.initState();
     // serverConnectionTestData();
   }

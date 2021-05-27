@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 import 'package:szewa/managers/db_manager.dart';
 
 
-fetchAlbum() async {
+fetchActivity() async {
 
   final response = await http.get(Uri.http('178.183.128.112:7080', '/api/activity/1'));
 
