@@ -3,7 +3,7 @@ import 'dart:typed_data';
 class RunModel {
 
   static final String fldId = 'id';
-  static final String _fldDateTime = 'dateTime';
+  static final String fldDateTime = 'dateTime';
   static final String _fldDescription = 'description';
   static final String _fldDistance = 'distance';
   static final String _fldAvgVelocity = 'avgVelocity';
@@ -15,7 +15,7 @@ class RunModel {
   static String createStatement = 'CREATE TABLE $tableName '
       '('
       '$fldId INTEGER PRIMARY KEY AUTOINCREMENT, '
-      '$_fldDateTime INTEGER, '
+      '$fldDateTime INTEGER, '
       '$_fldDescription TEXT, '
       '$_fldDistance DOUBLE, '
       '$_fldAvgVelocity DOUBLE, '
@@ -46,7 +46,7 @@ class RunModel {
 
   RunModel.fromMap(Map<String, dynamic> runMap) :
         id = runMap[fldId],
-        dateTime = runMap[_fldDateTime],
+        dateTime = runMap[fldDateTime],
         description = runMap[_fldDescription],
         distance = runMap[_fldDistance],
         avgVelocity = runMap[_fldAvgVelocity],
@@ -58,7 +58,7 @@ class RunModel {
   Map<String, dynamic> toMap() {
     return {
       fldId: id,
-      _fldDateTime: dateTime,
+      fldDateTime: dateTime,
       _fldDescription: description,
       _fldDistance: distance,
       _fldAvgVelocity: avgVelocity,
@@ -91,7 +91,7 @@ class RunModel {
   String toString() {
     return (
         '$fldId: $id, '
-            '$_fldDateTime: ${DateTime.fromMillisecondsSinceEpoch(dateTime)}, '
+            '$fldDateTime: ${DateTime.fromMillisecondsSinceEpoch(dateTime)}, '
             '$_fldDescription: $description, '
             '$_fldDistance: $distance, '
             '$_fldAvgVelocity: $avgVelocity, '
