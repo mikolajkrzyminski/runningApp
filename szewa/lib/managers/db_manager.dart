@@ -86,7 +86,7 @@ class DbManager {
     // Get a reference to the database.
     final Database db = await _database;
     // Query the table for all The Runs.
-    final List<Map<String, dynamic>> runs = await db.query(RunModel.tableName);
+    final List<Map<String, dynamic>> runs = await db.query(RunModel.tableName, orderBy: "${RunModel.fldDateTime} DESC");
     if (runs.isNotEmpty) {
       // Convert the List<Map<String, dynamic> into a List<RunModel>.
       return List.generate(runs.length, (i) {
