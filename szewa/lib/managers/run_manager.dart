@@ -12,6 +12,7 @@ class RunManager {
   StreamSubscription<Position> _positionStream;
   DbManager _dbManager;
   bool _isRunning;
+  bool _isRunPaused;
   RunObserver _runObserver;
 
   //singleton
@@ -26,10 +27,19 @@ class RunManager {
     _runObserver = null;
     _dbManager = DbManager();
     _isRunning = false;
+    _isRunPaused = false;
   }
 
   bool getIsRunning() {
     return _isRunning;
+  }
+
+  bool getIsRunPaused() {
+    return _isRunPaused;
+  }
+
+  void changeIsRunPaused() {
+    _isRunPaused = !_isRunPaused;
   }
 
   int getId() {
@@ -40,6 +50,16 @@ class RunManager {
     _isRunning = !_isRunning;
     _runId = await _dbManager.addRun(dateTime, "Test desc");
     await _startStream();
+  }
+
+  void pauseRun() {
+    changeIsRunPaused();
+    _positionStream.cancel();
+  }
+
+  void resumeRun() {
+    changeIsRunPaused();
+    _startStream();
   }
 
   void endRun(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
@@ -56,7 +76,7 @@ class RunManager {
       desiredAccuracy : LocationAccuracy.best,
       distanceFilter : 0,
       forceAndroidLocationManager : false,
-      intervalDuration : Duration(seconds: 5),
+      intervalDuration : Duration(seconds: 2),
       //timeLimit : Duration(seconds: 10)
     )
         .listen((position) {
