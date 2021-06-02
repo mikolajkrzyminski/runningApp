@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:szewa/pages/root_page.dart';
+import 'package:szewa/managers/start_app_manager.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -11,11 +12,9 @@ class MyApp extends StatefulWidget{
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
-    // TODO: implement initState
-    // super.initState();
+    super.initState();
     // serverConnectionTestData();
   }
 
@@ -25,20 +24,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: Color(0xFFF6F5F5),
         primaryColor: Colors.white,
         fontFamily: 'Roboto',
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
       ),
-      home: RootPage(), //TrainingPage()
+      home: StartAppManager(),
     );
   }
 }

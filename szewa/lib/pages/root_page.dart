@@ -33,25 +33,21 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F5F5)),
-      home: Scaffold(
-        // wyslwietla widok o zadanym id
-        body: _list.elementAt(_selectedIndex),
-        // kolor zmienia tylko tekst bo ikona ma kolor ustawiony w destination
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.deepOrange,
-          onTap: _onItemTapped,
-          items: allDestinations.map((Destination destination) {
-            return BottomNavigationBarItem(
-              icon: destination.icon,
-              label: destination.label,
-            );
-          }).toList(),
-        ),
+    return Scaffold(
+      // wyslwietla widok o zadanym id
+      body: _list.elementAt(_selectedIndex),
+      // kolor zmienia tylko tekst bo ikona ma kolor ustawiony w destination
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.deepOrange,
+        onTap: _onItemTapped,
+        items: allDestinations.map((Destination destination) {
+          return BottomNavigationBarItem(
+            icon: destination.icon,
+            label: destination.label,
+          );
+        }).toList(),
       ),
     );
   }
