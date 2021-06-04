@@ -59,14 +59,14 @@ class _StatsPresenterState extends State<StatsPresenter> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: widget.statsCalculator.distance.toStringAsFixed(2),
+                    text: (widget.statsCalculator.distance/1000).toStringAsFixed(2),
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 25),
                   ),
                   TextSpan(
-                    text: "\nDistance (m)",
+                    text: "\nDistance (km)",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w300,

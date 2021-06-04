@@ -24,7 +24,7 @@ enum NavigationStates {
   Login,
   RootPage,
   FirstRun,
-  Root,
+
 }
 
 class _NavigationState  extends State<Navigation>{

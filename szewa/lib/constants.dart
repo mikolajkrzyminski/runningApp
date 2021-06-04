@@ -1,4 +1,4 @@
 class Consts {
   // Shared Preference keys
-  static const String firstRunKey = "welcome20";
+  static const String firstRunKey = "welcome";
 }

@@ -112,11 +112,16 @@ class DbManager {
     });
   }
 
-  Future<int> addRun(int dateTime, String description) async {
+  Future<int> addRun(int id, int dateTime, String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     final run = RunModel(
-      id: null,
+      id: id,
       dateTime: dateTime,
       description: description,
+      distance: distance,
+      avgVelocity: avgVelocity,
+      calories: calories,
+      duration: duration,
+      picture: picture,
     );
     return _insertRun(run);
   }
@@ -147,11 +152,12 @@ class DbManager {
     String updateStatement = RunModel.getUpdateString(id, distance, avgVelocity, calories, duration, picture);
     await db.execute(updateStatement, );
   }
- */
+
   Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     Database db = await _database;
 
     RunModel runModel = RunModel(distance: distance, avgVelocity: avgVelocity, calories: calories, duration: duration, picture: picture);
     await db.update(RunModel.tableName, runModel.toMapUpdate(), where: '${RunModel.fldId} = $id');
   }
+ */
 }

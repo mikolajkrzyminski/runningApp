@@ -14,6 +14,7 @@ class RunManager {
   bool _isRunning;
   bool _isRunPaused;
   RunObserver _runObserver;
+  int _startTime;
 
   //singleton
   static final RunManager _instance = RunManager._RunManager();
@@ -28,6 +29,8 @@ class RunManager {
     _dbManager = DbManager();
     _isRunning = false;
     _isRunPaused = false;
+    _runId = null;
+    _startTime = 0;
   }
 
   bool getIsRunning() {
@@ -47,9 +50,12 @@ class RunManager {
   }
 
   void startRun(int dateTime) async {
+    _startTime = dateTime;
     _isRunning = !_isRunning;
-    _runId = await _dbManager.addRun(dateTime, "Test desc");
-    await _startStream();
+    _dbManager.getMaxRunId().then((value) {
+      _runId = value + 1;
+      _startStream();
+    });
   }
 
   void pauseRun() {
@@ -62,9 +68,9 @@ class RunManager {
     _startStream();
   }
 
-  void endRun(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
+  void endRun(String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
     _isRunning = !_isRunning;
-    _dbManager.updateRunInfo(id, distance, avgVelocity, calories, duration, picture);
+    _dbManager.addRun(_runId, _startTime, description, distance, avgVelocity, calories, duration, picture);
     _positionStream.cancel();
     _runId = null;
     _dbManager.printRuns();

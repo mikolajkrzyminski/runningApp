@@ -146,7 +146,7 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                           ),
                         ),
                         child: Text("Join without account", style: joinButtonText,),
-                        onPressed: (){widget.callback(NavigationStates.Root);},
+                        onPressed: (){widget.callback(NavigationStates.RootPage);},
                       ),
                     ),
                   ),

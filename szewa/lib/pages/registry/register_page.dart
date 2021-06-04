@@ -3,10 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
-import 'package:szewa/main.dart';
-import 'package:szewa/pages/registry/login_page.dart';
-
+import 'package:szewa/managers/connection_manager.dart';
 import '../navigation.dart';
 
 class RegisterPage extends StatefulWidget{
@@ -23,9 +20,11 @@ class _RegisterPageState  extends State<RegisterPage>{
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
+  Connection _connection;
 
   @override void initState() {
     super.initState();
+    _connection = Connection();
   }
 
   @override
@@ -115,7 +114,7 @@ class _RegisterPageState  extends State<RegisterPage>{
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      createUser(_password, _email).then((response) {
+                      _connection.createUser(_password, _email).then((response) {
                         if(response.statusCode == 200) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('Account has been created!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
@@ -195,19 +194,6 @@ class _RegisterPageState  extends State<RegisterPage>{
         ),
       ),
       labelText: labelText,
-    );
-  }
-
-  Future<http.Response> createUser(String password, String email) {
-    return http.post(
-      Uri.parse('http://178.183.128.112:7080/api/auth/signup'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-      }),
     );
   }
 }
