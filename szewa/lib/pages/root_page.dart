@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:szewa/components/navbar/destination.dart';
+import 'package:szewa/managers/connection_manager.dart';
 import 'package:szewa/pages/exercises_page.dart';
 import 'package:szewa/pages/profile_page.dart';
 import 'package:szewa/pages/social_page.dart';
@@ -24,6 +25,7 @@ enum NavigationStates {
 class _RootPageState extends State<RootPage> {
   int _selectedIndex;
   bool _showNavbar;
+  //Future<bool> _isLogged;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
+    //_isLogged = ConnectionManager().getIsLogged();
     return Scaffold(
       // wyslwietla widok o zadanym id
       body: getView(_selectedIndex),

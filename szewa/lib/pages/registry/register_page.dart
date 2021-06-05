@@ -20,11 +20,11 @@ class _RegisterPageState  extends State<RegisterPage>{
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
-  Connection _connection;
+  ConnectionManager _connection;
 
   @override void initState() {
     super.initState();
-    _connection = Connection();
+    _connection = ConnectionManager();
   }
 
   @override

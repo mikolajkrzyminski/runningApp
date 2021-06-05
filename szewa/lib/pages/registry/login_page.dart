@@ -21,11 +21,11 @@ class _LoginPageState  extends State<LoginPage>{
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
-  Connection _connection;
+  ConnectionManager _connection;
 
   @override void initState() {
     super.initState();
-    _connection = Connection();
+    _connection = ConnectionManager();
   }
 
   @override
@@ -102,6 +102,7 @@ class _LoginPageState  extends State<LoginPage>{
                           if(response.statusCode == 200) {
                             //ScaffoldMessenger.of(context)
                                // .showSnackBar(SnackBar(content: Text('Ok!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
+                            _connection.setResponse(response);
                             widget.callback(NavigationStates.RootPage);
                           } else {
                             ScaffoldMessenger.of(context)
