@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:szewa/managers/connection_manager.dart';
+import 'package:szewa/managers/db_manager.dart';
+import 'package:szewa/models/run_model.dart';
 import '../navigation.dart';
 
 class RegisterPage extends StatefulWidget{
@@ -114,11 +116,28 @@ class _RegisterPageState  extends State<RegisterPage>{
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      _connection.createUser(_password, _email).then((response) {
-                        if(response.statusCode == 200) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('Account has been created!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
-                          widget.callback(NavigationStates.Login);
+                      _connection.createUser(_password, _email).then((responseRegister) {
+                        if (responseRegister.statusCode == 200) {
+                          /*ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text('Account has been created!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));*/
+                          _connection.authorizeUser(_password, _email).then((responseAuthorize) {
+                            if (responseAuthorize.statusCode == 200) {
+                              _connection.setResponse(responseAuthorize);
+                              DbManager().getRuns().then((runs) {
+                                if(runs.isNotEmpty) {
+                                  runs.forEach((element) {
+                                    _connection.sendActivity(element.id);
+                                   // _connection.sendPhoto(element.id);
+                                  });
+                                }
+                              });
+                              widget.callback(NavigationStates.RootPage);
+                            } else {
+                              widget.callback(NavigationStates.Login);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text('Try again later'), backgroundColor: Colors.red,));
+                            }
+                          });
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('E-mail is in use'), backgroundColor: Colors.red,));

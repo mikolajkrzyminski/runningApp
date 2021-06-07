@@ -1,9 +1,15 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:szewa/managers/connection_manager.dart';
+import 'package:szewa/managers/db_manager.dart';
+import 'package:szewa/managers/run_manager.dart';
+import 'package:szewa/models/geolocation_model.dart';
+import 'package:szewa/models/run_model.dart';
 
 import '../navigation.dart';
 
@@ -98,11 +104,26 @@ class _LoginPageState  extends State<LoginPage>{
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
-                        _connection.authorizeUser(_password, _email).then((response) {
-                          if(response.statusCode == 200) {
+                        _connection.authorizeUser(_password, _email).then((response) async {
+                          if (response.statusCode == 200) {
+                            DbManager().clean();
                             //ScaffoldMessenger.of(context)
                                // .showSnackBar(SnackBar(content: Text('Ok!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
-                            _connection.setResponse(response);
+                            await _connection.setResponse(response);
+                            _connection.getAllActivities().then((activitiesJson) async {
+                              if (activitiesJson.body.isNotEmpty) {
+                                for(int i = 0; i < jsonDecode(activitiesJson.body).length; i ++) {
+                                  final ByteData imageData = await NetworkAssetBundle(Uri.parse("https://wiki.openstreetmap.org/w/images/d/d1/Tile_osm-no-label.png")).load("");
+                                  final Uint8List bytes = imageData.buffer.asUint8List();
+                                  var json = jsonDecode(activitiesJson.body)[i];
+                                  _connection.getPhoto(214).then((responsePhoto) {
+                                    var photoBytes = jsonDecode(responsePhoto.body);
+                                    DbManager().insertRun(RunModel.fromJson(json, photoBytes));
+                                  });
+                                  //GeolocationModel.fromJson(jsonDecode(activitiesJson.body[i]));
+                                }
+                              }
+                            });
                             widget.callback(NavigationStates.RootPage);
                           } else {
                             ScaffoldMessenger.of(context)

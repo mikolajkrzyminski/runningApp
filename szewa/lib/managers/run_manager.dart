@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:geolocator/geolocator.dart';
+import 'package:szewa/managers/connection_manager.dart';
 import 'db_manager.dart';
+import 'package:http/http.dart' as http;
+
 
 abstract class RunObserver {
   void onRunChanged(Position position);
@@ -53,7 +57,8 @@ class RunManager {
     _startTime = dateTime;
     _isRunning = !_isRunning;
     _dbManager.getMaxRunId().then((value) {
-      _runId = value + 1;
+      if (value != null) _runId = value + 1;
+      else _runId = 0;
       _startStream();
     });
   }
@@ -68,9 +73,16 @@ class RunManager {
     _startStream();
   }
 
-  void endRun(String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
+  Future<void> endRun(String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     _isRunning = !_isRunning;
     _dbManager.addRun(_runId, _startTime, description, distance, avgVelocity, calories, duration, picture);
+    var response = await ConnectionManager().sendActivity(_runId);
+    response.body;
+    ConnectionManager().sendPhoto(_runId, jsonDecode(response.body)["id"]);
+    var getResponse = await ConnectionManager().getAllActivities();
+    getResponse.body;
+    //var refreshTokenReponse = await ConnectionManager().refreshToken();
+    //refreshTokenReponse.body;
     _positionStream.cancel();
     _runId = null;
     _dbManager.printRuns();
@@ -93,5 +105,7 @@ class RunManager {
       print("position has changed !Current: lat: ${position.latitude}, long: ${position.longitude}");
     });
   }
+
+
 
 }

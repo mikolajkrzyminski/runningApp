@@ -42,6 +42,12 @@ class DbManager {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
+  Future<void> clean() async {
+    Database db = await _database;
+    db.delete(RunModel.tableName);
+    db.delete(GeolocationModel.tableName);
+  }
+
   Future<void> addGeolocation(Position geolocator, int runId) async {
     final geoposition = GeolocationModel(
       runId,
@@ -123,10 +129,10 @@ class DbManager {
       duration: duration,
       picture: picture,
     );
-    return _insertRun(run);
+    return insertRun(run);
   }
 
-  Future<int> _insertRun(RunModel run) async {
+  Future<int> insertRun(RunModel run) async {
     // Get a reference to the database.
     Database db = await _database;
 
@@ -141,23 +147,31 @@ class DbManager {
     );
   }
 
+
   Future<int> getMaxRunId() async {
     final Database db = await _database;
     return Sqflite
         .firstIntValue(await db.rawQuery('SELECT MAX(${RunModel.fldId}) from ${RunModel.tableName}'));
   }
-/*
-  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
-    Database db = await _database;
-    String updateStatement = RunModel.getUpdateString(id, distance, avgVelocity, calories, duration, picture);
-    await db.execute(updateStatement, );
+
+  Future<RunModel> getRunById(int id) async {
+    final Database db = await _database;
+    List<Map<String, Object>> activity = await db.query(
+        RunModel.tableName, where: "${RunModel.fldId} == $id");
+    if (activity.isNotEmpty) {
+      return RunModel.fromMap(activity[0]);
+    } else
+      return null;
   }
 
-  Future<void> updateRunInfo(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
-    Database db = await _database;
-
-    RunModel runModel = RunModel(distance: distance, avgVelocity: avgVelocity, calories: calories, duration: duration, picture: picture);
-    await db.update(RunModel.tableName, runModel.toMapUpdate(), where: '${RunModel.fldId} = $id');
-  }
- */
+    Future<List<GeolocationModel>> getGeolocationsById(int id) async {
+      final Database db = await _database;
+      List<Map<String, Object>> geolocations = await db.query(
+          GeolocationModel.tableName, where: "${GeolocationModel.fldRunId} == $id");
+      if (geolocations.isNotEmpty) {
+        return List.generate(geolocations.length, (i) {
+          return GeolocationModel.fromMap(geolocations[i]);
+        });
+      } else return [];
+    }
 }
