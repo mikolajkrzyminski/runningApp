@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:szewa/constants.dart';
@@ -70,7 +69,6 @@ class ConnectionManager {
     String token = "Bearer ";
     var value = await storage.read(key: Consts.jwtStorageKey);
     token += jsonDecode(value)[_tokenJsonKey];
-    ByteData bytes = await rootBundle.load('assets/images/catGrey.png');
     var request = http.MultipartRequest('POST', Uri.parse(_adress + "/api/activity/$serverActivityId/add-picture"))
       ..files.add(http.MultipartFile(
         "picture",

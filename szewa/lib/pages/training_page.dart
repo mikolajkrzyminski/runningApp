@@ -19,15 +19,6 @@ class TrainingPage extends StatefulWidget {
   _TrainingPageState createState() => _TrainingPageState();
 }
 
-TextStyle _CircleButtonTextStyle() {
-  return TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-    fontStyle: FontStyle.italic,
-    fontSize: 22,
-  );
-}
-
 class _TrainingPageState extends State<TrainingPage> implements RunObserver {
   RunManager _runManager;
   MapController _mapController;
@@ -126,6 +117,9 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Spacer(
+                flex: 1,
+              ),
               Visibility(
                 visible: !_runManager.getIsRunning() && !_runManager.getIsRunPaused(),
                 child: MaterialButton(
@@ -176,7 +170,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
               Visibility(
                 visible: _runManager.getIsRunning() && _runManager.getIsRunPaused(),
                 child: Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: MaterialButton(
                     shape: CircleBorder(),
                     padding: EdgeInsets.all(20),
@@ -218,7 +212,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
               Visibility(
                 visible: _runManager.getIsRunning() && _runManager.getIsRunPaused(),
                 child: Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: MaterialButton(
                     shape: CircleBorder(),
                     padding: EdgeInsets.all(20),
@@ -237,6 +231,9 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                     },
                   ),
                 ),
+              ),
+              Spacer(
+                flex: 1,
               ),
             ],
           ),
