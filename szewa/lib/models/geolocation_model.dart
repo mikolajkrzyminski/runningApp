@@ -2,7 +2,7 @@ import 'package:szewa/models/run_model.dart';
 
 class GeolocationModel {
   //col names from db
-  static final String _fldRunId = 'runId';
+  static final String fldRunId = 'runId';
   static final String _fldDateTime = 'dateTime';
   static final String _fldAltitude = 'altitude';
   static final String _fldLatitude = 'latitude';
@@ -12,14 +12,14 @@ class GeolocationModel {
   static String tableName = 'geolocations';
   //create script
   static String createStatement = 'CREATE TABLE $tableName('
-      '$_fldRunId INTEGER, '
+      '$fldRunId INTEGER, '
       '$_fldDateTime INTEGER, '
       '$_fldAltitude DOUBLE, '
       '$_fldLatitude DOUBLE, '
       '$_fldLongitude DOUBLE, '
       '$_fldSpeed DOUBLE, '
-      'PRIMARY KEY($_fldRunId, $_fldDateTime), '
-      'FOREIGN KEY($_fldRunId) REFERENCES ${RunModel.tableName}(${RunModel.fldId}))';
+      'PRIMARY KEY($fldRunId, $_fldDateTime), '
+      'FOREIGN KEY($fldRunId) REFERENCES ${RunModel.tableName}(${RunModel.fldId}))';
 
   final int _id;
   final int _dateTime;
@@ -38,7 +38,7 @@ class GeolocationModel {
       );
 
   GeolocationModel.fromMap(Map<String, dynamic> geolocationMap) :
-        _id = geolocationMap[_fldRunId],
+        _id = geolocationMap[fldRunId],
         _dateTime = geolocationMap[_fldDateTime],
         _altitude = geolocationMap[_fldAltitude],
         _latitude = geolocationMap[_fldLatitude],
@@ -47,7 +47,7 @@ class GeolocationModel {
 
   Map<String, dynamic> toMap() {
     return {
-      _fldRunId: _id,
+      fldRunId: _id,
       _fldDateTime: _dateTime,
       _fldAltitude: _altitude,
       _fldLatitude: _latitude,
@@ -57,9 +57,8 @@ class GeolocationModel {
   }
 
   String toString() {
-
     return (
-        '$_fldRunId: $_id, '
+        '$fldRunId: $_id, '
             '$_fldDateTime: ${DateTime.fromMillisecondsSinceEpoch(_dateTime)}, '
             '$_fldAltitude: $_altitude, '
             '$_fldLatitude: $_latitude, '
@@ -67,4 +66,22 @@ class GeolocationModel {
             '$_fldSpeed $_speed'
     );
   }
+
+  factory GeolocationModel.fromJson(Map<String, dynamic> json) {
+    return GeolocationModel(
+      json["id"] as int,
+      json["time"] as int,
+      0 as double,
+      json[_fldLatitude] as double,
+      json[_fldLongitude] as double,
+      0 as double,
+    );
+  }
+
+  Map<String, dynamic> toJson() =>
+      {
+        "latitude": _latitude.toString(),
+        "longitude": _longitude.toString(),
+        "time": DateTime.fromMillisecondsSinceEpoch(_dateTime).toIso8601String() + 'Z',
+      };
 }

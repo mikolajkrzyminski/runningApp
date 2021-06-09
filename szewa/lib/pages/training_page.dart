@@ -12,6 +12,9 @@ import 'package:szewa/managers/stats_calculator.dart';
 import 'package:screenshot/screenshot.dart';
 
 class TrainingPage extends StatefulWidget {
+  Function callback;
+  TrainingPage(this.callback);
+
   @override
   _TrainingPageState createState() => _TrainingPageState();
 }
@@ -144,6 +147,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                       _stopwatchTimer.onExecute.add(StopWatchExecute.reset);
                       _stopwatchTimer.onExecute.add(StopWatchExecute.start);
                       _runManager.startRun(DateTime.now().millisecondsSinceEpoch);
+                      widget.callback(false);
                     });
                   },
                 ),
@@ -189,7 +193,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                         //Capture Done
                         image.readAsBytes().then((valueImage) {
                           _runManager.endRun(
-                            _runManager.getId(),
+                            "test desc",
                             _statsCalculator.distance,
                             _statsCalculator.avgVelocity,
                             _statsCalculator.calories.round(),
@@ -201,6 +205,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                             _statsCalculator.clearStats();
                             _runPositions.clear();
                             _runManager.changeIsRunPaused();
+                            widget.callback(true);
                           });
                         });
                       }).catchError((onError) {

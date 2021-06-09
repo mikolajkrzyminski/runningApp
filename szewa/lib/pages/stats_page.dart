@@ -73,6 +73,7 @@ class _StatsPageState extends State<StatsPage> {
                           child: Column(
                             children: [
                               Container(
+                                padding: const EdgeInsets.all(5.0),
                                 width: double.infinity,
                                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                 child: Stack (
@@ -175,7 +176,7 @@ class _StatsPageState extends State<StatsPage> {
   String getDayDescription(int timestamp) {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     String desc = "";
-    if (Duration(days: 7) > DateTime.now().difference(date)) {
+    if (Duration(days: 7) >= DateTime.now().difference(date)) {
       desc += DateFormat('EEEE').format(date);
     }
     if (date.hour >= 5 && date.hour < 12) desc += " morning";

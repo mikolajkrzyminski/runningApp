@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:szewa/components/navbar/destination.dart';
 import 'package:szewa/pages/exercises_page.dart';
-import 'package:szewa/pages/home_page.dart';
 import 'package:szewa/pages/profile_page.dart';
 import 'package:szewa/pages/social_page.dart';
 import 'package:szewa/pages/statistics_page.dart';
+import 'package:szewa/pages/training_page.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key key}) : super(key: key);
@@ -13,16 +13,25 @@ class RootPage extends StatefulWidget {
   _RootPageState createState() => _RootPageState();
 }
 
-class _RootPageState extends State<RootPage> {
-  int _selectedIndex = 2;
+enum NavigationStates {
+  SocialPage,
+  StatisticsPage,
+  TrainingPage,
+  ExercisesPage,
+  ProfilePage,
+}
 
-  List<Widget> _list = [
-    SocialPage(),
-    StatisticsPage(),
-    HomePage(),
-    ExercisesPage(),
-    ProfilePage(),
-  ];
+class _RootPageState extends State<RootPage> {
+  int _selectedIndex;
+  bool _showNavbar;
+  //Future<bool> _isLogged;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = 2;
+    _showNavbar = true;
+  }
 
   // zwraca id wybranego elementu z navbar i wywoluje odpowiadajacy mu widok z _list
   void _onItemTapped(int index) {
@@ -33,14 +42,14 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F5F5)),
-      home: Scaffold(
-        // wyslwietla widok o zadanym id
-        body: _list.elementAt(_selectedIndex),
-        // kolor zmienia tylko tekst bo ikona ma kolor ustawiony w destination
-        bottomNavigationBar: BottomNavigationBar(
+    //_isLogged = ConnectionManager().getIsLogged();
+    return Scaffold(
+      // wyslwietla widok o zadanym id
+      body: getView(_selectedIndex),
+      // kolor zmienia tylko tekst bo ikona ma kolor ustawiony w destination
+      bottomNavigationBar: Offstage(
+        offstage: !_showNavbar,
+        child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.deepOrange,
@@ -54,5 +63,36 @@ class _RootPageState extends State<RootPage> {
         ),
       ),
     );
+  }
+
+  void callback(bool showNavbar) {
+    setState(() {
+      _showNavbar = showNavbar;
+    });
+  }
+
+  Widget getView(int index) {
+    Widget view;
+    if(2 == index) {
+
+    }
+    switch (index) {
+      case 0:
+        view = SocialPage();
+        break;
+      case 1:
+        view = StatisticsPage();
+        break;
+      case 2:
+        view = TrainingPage(callback);
+        break;
+      case 3:
+        view = ExercisesPage();
+        break;
+      case 4:
+        view = ProfilePage();
+        break;
+    }
+    return view;
   }
 }

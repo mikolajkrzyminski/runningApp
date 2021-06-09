@@ -54,7 +54,6 @@ class RunModel {
         duration = runMap[_fldDuration],
         picture = runMap[_fldPicture];
 
-
   Map<String, dynamic> toMap() {
     return {
       fldId: id,
@@ -100,4 +99,28 @@ class RunModel {
     );
   }
 
+  factory RunModel.fromJson(Map<String, dynamic> json, Uint8List picture) {
+    return RunModel(
+      id: json[fldId] as int,
+      dateTime: DateTime.parse(json["startTime"]).millisecondsSinceEpoch,
+      description: json[_fldDescription] as String,
+      distance: json[_fldDistance] as double,
+      avgVelocity: json[_fldAvgVelocity] as double,
+      calories: json[_fldCalories] as int,
+      duration: json["durationSeconds"] as int,
+      picture: picture
+    );
+  }
+
+    Map<String, dynamic> toJson(String email, var locations) =>
+      {
+        "avgVelocity": avgVelocity.toString(),
+        "calories": calories.toString(),
+        "description": description,
+        "distance": distance.toString(),
+        "durationSeconds": duration.toString(),
+        "locations": locations,
+        "startTime": DateTime.fromMillisecondsSinceEpoch(dateTime).toIso8601String() + 'Z',
+        "userEmail": email
+      };
 }
