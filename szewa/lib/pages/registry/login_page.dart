@@ -116,9 +116,10 @@ class _LoginPageState  extends State<LoginPage>{
                                   final ByteData imageData = await NetworkAssetBundle(Uri.parse("https://wiki.openstreetmap.org/w/images/d/d1/Tile_osm-no-label.png")).load("");
                                   final Uint8List bytes = imageData.buffer.asUint8List();
                                   var json = jsonDecode(activitiesJson.body)[i];
-                                  _connection.getPhoto(214).then((responsePhoto) {
-                                    var photoBytes = jsonDecode(responsePhoto.body);
-                                    DbManager().insertRun(RunModel.fromJson(json, photoBytes));
+                                  //DbManager().insertRun(RunModel.fromJson(json, bytes));
+                                  _connection.getPhoto(json["id"]).then((responsePhoto) {
+                                    List<int> photoBytes = responsePhoto.body.codeUnits;
+                                    DbManager().insertRun(RunModel.fromJson(json, Uint8List.fromList(photoBytes)));
                                   });
                                   //GeolocationModel.fromJson(jsonDecode(activitiesJson.body[i]));
                                 }

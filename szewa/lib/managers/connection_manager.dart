@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -65,39 +64,26 @@ class ConnectionManager {
     return storage.read(key: Consts.jwtStorageKey).then((value) => value != null ? true : false);
   }
 
-  /*
-  Future<http.Response> sendPhoto(int activityLocalId, int serverActivityId) async {
+  Future<void> sendPhoto(int activityLocalId, int serverActivityId) async {
     RunModel activity = await DbManager().getRunById(activityLocalId);
     //create multipart request for POST or PATCH method
     String token = "Bearer ";
-    await storage.read(key: Consts.jwtStorageKey).then((value) {
-      token += jsonDecode(value)[_tokenJsonKey];
-    });
+    var value = await storage.read(key: Consts.jwtStorageKey);
+    token += jsonDecode(value)[_tokenJsonKey];
+    ByteData bytes = await rootBundle.load('assets/images/catGrey.png');
     var request = http.MultipartRequest('POST', Uri.parse(_adress + "/api/activity/$serverActivityId/add-picture"))
-      ..files.add(await http.MultipartFile.fromBytes(
-          "picture", activity.picture, contentType: MediaType("application", "octet-stream"),
-          ));
-    request.headers['Content-Type'] = 'multipart/form-data; charset=UTF-8';
+      ..files.add(http.MultipartFile(
+        "picture",
+          http.ByteStream.fromBytes(activity.picture),
+        activity.picture.length,
+          contentType: MediaType("application", "png"),
+          filename: "abc.png"
+      ));
     request.headers["Authorization"] = token;
     var response = await request.send();
     if (response.statusCode == 200) print('Uploaded!');
   }
-*/
 
-  Future<http.Response> sendPhoto(int activityLocalId, int serverActivityId) async {
-    RunModel activity = await DbManager().getRunById(activityLocalId);
-    //create multipart request for POST or PATCH method
-    String token = "Bearer ";
-    await storage.read(key: Consts.jwtStorageKey).then((value) {
-      token += jsonDecode(value)[_tokenJsonKey];
-    });
-    var request = http.MultipartRequest('POST', Uri.parse(_adress + "/api/activity/$serverActivityId/add-picture"));
-    request.files.add(await http.MultipartFile.fromBytes('image', (await rootBundle.load('assets/images/catGrey.png')).buffer.asUint8List(), filename: "catGrey.png",));
-    request.headers['Content-Type'] = 'multipart/form-data; charset=UTF-8';
-    request.headers["Authorization"] = token;
-    var response = await request.send();
-    if (response.statusCode == 200) print('Uploaded!');
-  }
 
   Future<http.Response> sendActivity(int activityLocalId) async {
     RunModel activity = await DbManager().getRunById(activityLocalId);
@@ -130,9 +116,8 @@ class ConnectionManager {
       token = jsonDecode(value)[_tokenJsonKey];
     });
     return http.get(
-      Uri.parse('$_adress/api/activity/${runId}/get-picture'),
+      Uri.parse('$_adress/api/activity/$runId/get-picture'),
       headers: <String, String>{
-        'Content-Type': 'multipart/form-data; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
     );
