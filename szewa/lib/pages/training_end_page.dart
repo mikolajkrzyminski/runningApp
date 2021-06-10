@@ -10,6 +10,8 @@ class _TrainingEndPageState extends State<TrainingEndPage> {
   // ustawia tekst startowy
   // controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length));
   TextEditingController textEditingController = TextEditingController();
+  final isSelected = <bool>[false, false, false];
+  double _sliderDiscreteValue = 0;
 
   @override
   void initState() {
@@ -32,18 +34,23 @@ class _TrainingEndPageState extends State<TrainingEndPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 40),
                       child: TextField(
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Color(0xFF003259),
-                        ),
-                        // tekst startowy
-                        controller: TextEditingController(
-                            text:
-                                "trening"), // ..selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length)),
-                      ),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Color(0xFF003259),
+                            ),
+                            // tekst startowy
+                            // controller: TextEditingController(
+                            //     text:
+                            //         "trening"),
+                          decoration: InputDecoration(
+                            hintText: "Training",
+                            icon: Icon(Icons.edit),
+                          ),
+                          ),
                     ),
                     Container(
                       height: 275,
@@ -151,7 +158,90 @@ class _TrainingEndPageState extends State<TrainingEndPage> {
                 ),
               ),
             ),
+            Card(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              elevation: 1,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      "How was it?",
+                      style: TextStyle(
+                        color: Color(0xFF003259),
+                        fontSize: 18,
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[900],
+                      height: 2,
+                    ),
+                    SizedBox(height: 20,),
+                    Text(
+                        "Terrain:",
+                    ),
+                    SizedBox(height: 10,),
+                    ToggleButtons(
+                      color: Color(0xFF003259),
+                      // kolor wybranego tekstu
+                      selectedColor: Color(0xFFFFFFFF),
+                      selectedBorderColor: Color(0xFF003259),
+                      fillColor: Color(0xFF003259),
+                      borderColor: Color(0xFF003259),
+                      borderRadius: BorderRadius.circular(10.0),
+                      constraints: BoxConstraints(minHeight: 36.0),
+                      isSelected: isSelected,
+                      onPressed: (index) {
+                        // wybór opcji
+                        setState(() {
+                          for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+                            if (buttonIndex == index) {
+                              isSelected[buttonIndex] = !isSelected[buttonIndex];
+                            } else {
+                              isSelected[buttonIndex] = false;
+                            }
+                          }
+                        });
+                      },
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 35.0),
+                          child: Text('TRACK'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 35.0),
+                          child: Text('ROAD'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 35.0),
+                          child: Text('TRAIL'),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Text(
+                      "Effort:",
+                    ),
+                    SizedBox(height: 10,),
+                Slider(
+                  inactiveColor: Color(0xFFFFFFFF),
+                activeColor: Color(0xFF00334E),
 
+                value: _sliderDiscreteValue,
+                min: 0,
+                max: 10,
+                divisions: 9,
+                label: _sliderDiscreteValue.round().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _sliderDiscreteValue = value;
+                  });
+                },
+              ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
