@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 class ExercisesPage extends StatefulWidget{
 
-  ExercisesPage({Key key}) : super(key: key);
-
   @override
   _ExercisesPageState createState() {
     return _ExercisesPageState();
