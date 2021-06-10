@@ -16,8 +16,12 @@ class _ProfilePageState  extends State<ProfilePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RegisterPage(null),
-      //Center(child: Text("PROFIL")),
+      body: Image.asset("assets/images/profilImg.png",
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
     );
   }
 }

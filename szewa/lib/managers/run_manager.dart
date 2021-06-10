@@ -76,13 +76,8 @@ class RunManager {
   Future<void> endRun(String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     _isRunning = !_isRunning;
     _dbManager.addRun(_runId, _startTime, description, distance, avgVelocity, calories, duration, picture);
-    var response = await ConnectionManager().sendActivity(_runId);
-    response.body;
-    ConnectionManager().sendPhoto(_runId, jsonDecode(response.body)["id"]);
-    var getResponse = await ConnectionManager().getAllActivities();
-    getResponse.body;
-    //var refreshTokenReponse = await ConnectionManager().refreshToken();
-    //refreshTokenReponse.body;
+    int serverRunId = await ConnectionManager().sendActivity(_runId);
+    if(null != serverRunId) ConnectionManager().sendPhoto(_runId, serverRunId);
     _positionStream.cancel();
     _runId = null;
     _dbManager.printRuns();
