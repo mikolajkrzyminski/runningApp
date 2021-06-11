@@ -5,7 +5,6 @@ import 'package:szewa/pages/profile_page.dart';
 import 'package:szewa/pages/social_page.dart';
 import 'package:szewa/pages/stats_page.dart';
 import 'package:szewa/pages/training_page.dart';
-import 'package:szewa/pages/training_end_page.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key key}) : super(key: key);
@@ -80,7 +79,7 @@ class _RootPageState extends State<RootPage> {
         view = TrainingPage(callback);
         break;
       case 3:
-        view = TrainingEndPage();
+        view = ExercisesPage();
         break;
       case 4:
         view = ProfilePage();
