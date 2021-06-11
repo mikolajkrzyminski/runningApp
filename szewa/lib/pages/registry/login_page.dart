@@ -99,38 +99,28 @@ class _LoginPageState  extends State<LoginPage>{
                         ),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
-                        _connection.authorizeUser(_password, _email).then((response) async {
-                          if (response.statusCode == 200) {
+                        if(await _connection.authorizeUser(_password, _email)) {
                             DbManager().clean();
-                            //ScaffoldMessenger.of(context)
-                               // .showSnackBar(SnackBar(content: Text('Ok!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
-                            await _connection.setResponse(response);
-                            _connection.getAllActivities().then((activitiesJson) async {
-                              if (activitiesJson.body.isNotEmpty) {
-                                for(int i = 0; i < jsonDecode(activitiesJson.body).length; i ++) {
-                                  final ByteData imageData = await NetworkAssetBundle(Uri.parse("https://wiki.openstreetmap.org/w/images/d/d1/Tile_osm-no-label.png")).load("");
-                                  final Uint8List bytes = imageData.buffer.asUint8List();
-                                  var json = jsonDecode(activitiesJson.body)[i];
-                                  //DbManager().insertRun(RunModel.fromJson(json, bytes));
-                                  _connection.getPhoto(json["id"]).then((responsePhoto) {
-                                    List<int> photoBytes = responsePhoto.body.codeUnits;
-                                    DbManager().insertRun(RunModel.fromJson(json, Uint8List.fromList(photoBytes)));
-                                  });
-                                  //GeolocationModel.fromJson(jsonDecode(activitiesJson.body[i]));
+                            var activitiesList = await _connection.getAllActivities();
+                            if(null != activitiesList) {
+                              if (activitiesList.isNotEmpty) {
+                                for(int i = 0; i < activitiesList.length; i ++) {
+                                  String photo = await _connection.getPhoto(activitiesList[i]["id"]);
+                                  if(null != photo) {
+                                    List<int> photoBytes = photo.codeUnits;
+                                    DbManager().insertRun(RunModel.fromJson(activitiesList[i], Uint8List.fromList(photoBytes)));
+                                  }
+
                                 }
                               }
-                            });
+                            }
                             widget.callback(NavigationStates.RootPage);
-                          } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text('Login failed'), backgroundColor: Colors.red,));
-                          }
-                        });
+                        }
                       }
                     },
                     child: Text('Join us', style: TextStyle(color: Color(0xFF00334E))),

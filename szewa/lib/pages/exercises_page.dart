@@ -15,7 +15,12 @@ class _ExercisesPageState  extends State<ExercisesPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("CWICZENIA")),
+      body: Image.asset("assets/images/exercisesImg.png",
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
     );
   }
 }

@@ -116,28 +116,25 @@ class _RegisterPageState  extends State<RegisterPage>{
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      _connection.createUser(_password, _email).then((responseRegister) {
+                      _connection.createUser(_password, _email).then((responseRegister) async {
                         if (responseRegister.statusCode == 200) {
                           /*ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('Account has been created!'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));*/
-                          _connection.authorizeUser(_password, _email).then((responseAuthorize) {
-                            if (responseAuthorize.statusCode == 200) {
-                              _connection.setResponse(responseAuthorize);
-                              DbManager().getRuns().then((runs) {
-                                if(runs.isNotEmpty) {
-                                  runs.forEach((element) {
-                                    _connection.sendActivity(element.id);
-                                   // _connection.sendPhoto(element.id);
-                                  });
-                                }
-                              });
-                              widget.callback(NavigationStates.RootPage);
+                          if (await _connection.authorizeUser(_password, _email)) {
+                            DbManager().getRuns().then((runs) {
+                              if(runs.isNotEmpty) {
+                                runs.forEach((element) {
+                                  _connection.sendActivity(element.id);
+                                 // _connection.sendPhoto(element.id);
+                                });
+                              }
+                            });
+                            widget.callback(NavigationStates.RootPage);
                             } else {
-                              widget.callback(NavigationStates.Login);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text('Try again later'), backgroundColor: Colors.red,));
-                            }
-                          });
+                            widget.callback(NavigationStates.Login);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text('Try again later'), backgroundColor: Colors.red,));
+                          }
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('E-mail is in use'), backgroundColor: Colors.red,));

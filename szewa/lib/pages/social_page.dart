@@ -14,6 +14,13 @@ class SocialPage extends StatefulWidget{
 class _SocialPageState  extends State<SocialPage>{
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("SPOLECZNOSC"));
+    return Scaffold(
+      body: Image.asset("assets/images/groupImg.png",
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
+    );
   }
 }
