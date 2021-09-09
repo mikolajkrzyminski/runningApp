@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:szewa/managers/connection_manager.dart';
 import 'package:szewa/managers/db_manager.dart';
 import 'package:szewa/models/run_model.dart';
+import 'package:szewa/styles/text_theme.dart' as textTheme;
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 import '../navigation.dart';
 
@@ -45,13 +47,13 @@ class _LoginPageState  extends State<LoginPage>{
                     Container(
                       margin: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 40.0),
                       child: Center(
-                        child: Text("Szewa", style: TextStyle(fontSize: 96, color: Colors.white, fontWeight: FontWeight.w300),),
+                        child: Text("Szewa", style: textTheme.TextTheme.appLogoText,),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextFormField(
-                        style: getFieldTextStyle(),
+                        style: textTheme.TextTheme.loginFormText,
                         decoration: getFieldDecorator("Mail"),
                         // The validator receives the text that the user has entered.
                         validator: (value) {
@@ -68,7 +70,7 @@ class _LoginPageState  extends State<LoginPage>{
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextFormField(
-                        style: getFieldTextStyle(),
+                        style: textTheme.TextTheme.loginFormText,
                         decoration: getFieldDecorator("Password"),
                         // The validator receives the text that the user has entered.
                         validator: (value) {
@@ -87,12 +89,12 @@ class _LoginPageState  extends State<LoginPage>{
                       padding: EdgeInsets.all(10),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          foregroundColor: MaterialStateProperty.all<Color>(colorTheme.ColorTheme.loginFormButtonForegroundColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(colorTheme.ColorTheme.loginFormButtonBackgroundColor),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.black)
+                                side: BorderSide(color: colorTheme.ColorTheme.loginFormButtonBorderColor)
                             ),
                           ),
                         ),
@@ -120,7 +122,7 @@ class _LoginPageState  extends State<LoginPage>{
                             }
                           }
                         },
-                        child: Text('Join us', style: TextStyle(color: Color(0xFF00334E))),
+                        child: Text('Join us', style: textTheme.TextTheme.loginFormButtonText),
                       ),
                     ),
                     Padding(
@@ -128,11 +130,11 @@ class _LoginPageState  extends State<LoginPage>{
                       child: RichText(
                         text: TextSpan(
                           text: 'Don\'t have account? ',
-                          style: getFieldTextStyle(),
+                          style: textTheme.TextTheme.loginFormText,
                           children: <TextSpan>[
                             TextSpan(
                               text: 'Sign up!',
-                              style: getLinkTextStyle(),
+                              style: textTheme.TextTheme.linkUnderlineText,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   widget.callback(NavigationStates.Register);
@@ -155,14 +157,6 @@ class _LoginPageState  extends State<LoginPage>{
     return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(mail);
   }
 
-  TextStyle getFieldTextStyle() {
-    return TextStyle(color: Colors.white,);
-  }
-
-  TextStyle getLinkTextStyle() {
-    return TextStyle(color: Colors.blue, decoration: TextDecoration.underline);
-  }
-
   InputDecoration getFieldDecorator(String labelText) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
@@ -181,9 +175,7 @@ class _LoginPageState  extends State<LoginPage>{
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(color: Colors.red, width: 2),
       ),
-      labelStyle: TextStyle(
-        color: Color(0xFFFAFFFF),
-      ),
+      labelStyle: textTheme.TextTheme.loginFormFieldText,
       labelText: labelText,
     );
   }

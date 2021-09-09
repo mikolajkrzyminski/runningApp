@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:szewa/pages/navigation.dart';
+import 'package:szewa/styles/text_theme.dart' as textTheme;
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 class ChooseAccount extends StatefulWidget{
   Function callback;
@@ -23,21 +25,21 @@ class _ChooseAccountState  extends State<ChooseAccount>{
     super.initState();
     showInfo = false;
     showAccountInfo = false;
-    buttonText = TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300);
-    infoText = TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300);
-    joinButtonText = TextStyle(color: Color(0xFF00334E), fontSize: 14, fontWeight: FontWeight.w400);
+    buttonText = textTheme.TextTheme.buttonText;
+    infoText = textTheme.TextTheme.infoText;
+    joinButtonText = textTheme.TextTheme.joinButtonText;
   }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF00334E),
+        backgroundColor: colorTheme.ColorTheme.appInfoBackgroundColor,
         body: Column(
           children: [
             Container(
               margin: EdgeInsets.all(40.0),
               child: Center(
-                child: Text("Szewa", style: TextStyle(fontSize: 96, color: Colors.white, fontWeight: FontWeight.w300),),
+                child: Text("Szewa", style: textTheme.TextTheme.appLogoText),
               ),
             ),
             Container(
@@ -54,8 +56,8 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                     },
                     child: Text('Use app with account', style: buttonText),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black.withOpacity(0.00),
-                      side: BorderSide(color: Colors.white, width: 1),
+                      primary: colorTheme.ColorTheme.appInfoButtonBackground,
+                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorderColor, width: 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -83,7 +85,7 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                         padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
+                            primary: colorTheme.ColorTheme.appInfoElevatedButtonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -111,8 +113,8 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                     },
                     child: Text('Use app without account', style: buttonText),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black.withOpacity(0.00),
-                      side: BorderSide(color: Colors.white, width: 1),
+                      primary: colorTheme.ColorTheme.appInfoButtonBackground,
+                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorderColor, width: 1),
                       shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       ),
@@ -139,7 +141,7 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                         padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
+                            primary: colorTheme.ColorTheme.appInfoElevatedButtonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

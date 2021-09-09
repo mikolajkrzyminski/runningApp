@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:geolocator/geolocator.dart';
 import 'package:szewa/managers/connection_manager.dart';
+import 'package:szewa/managers/location_service.dart';
 import 'db_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,6 +60,7 @@ class RunManager {
       if (value != null) _runId = value + 1;
       else _runId = 0;
       _startStream();
+      //_startStreamNew();
     });
   }
 
@@ -83,7 +84,7 @@ class RunManager {
     _dbManager.printRuns();
   }
 
-  Future<void> _startStream() async{
+  Future<void> _startStreamOld() async{
     _positionStream = Geolocator
         .getPositionStream(
       desiredAccuracy : LocationAccuracy.best,
@@ -93,14 +94,22 @@ class RunManager {
       //timeLimit : Duration(seconds: 10)
     )
         .listen((position) {
-      _dbManager.addGeolocation(position, _runId);
-      if(null != _runObserver) {
-        _runObserver.onRunChanged(position);
-      }
-      print("position has changed !Current: lat: ${position.latitude}, long: ${position.longitude}");
+      _addPosition(position);
     });
   }
 
+  Future<void> _startStream() async{
+    _positionStream = LocationService().locationStream.listen((position) {
+      _addPosition(position);
+    });
+  }
 
+  void _addPosition(Position position) {
+    _dbManager.addGeolocation(position, _runId);
+    if(null != _runObserver) {
+      _runObserver.onRunChanged(position);
+    }
+    print("position has changed !Current: lat: ${position.latitude}, long: ${position.longitude}");
+  }
 
 }
