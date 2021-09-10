@@ -57,7 +57,7 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                     child: Text('Use app with account', style: buttonText),
                     style: ElevatedButton.styleFrom(
                       primary: colorTheme.ColorTheme.appInfoButtonBackground,
-                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorderColor, width: 1),
+                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorder, width: 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -114,7 +114,7 @@ class _ChooseAccountState  extends State<ChooseAccount>{
                     child: Text('Use app without account', style: buttonText),
                     style: ElevatedButton.styleFrom(
                       primary: colorTheme.ColorTheme.appInfoButtonBackground,
-                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorderColor, width: 1),
+                      side: BorderSide(color: colorTheme.ColorTheme.appInfoButtonBorder, width: 1),
                       shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       ),

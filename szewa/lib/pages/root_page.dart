@@ -5,6 +5,7 @@ import 'package:szewa/pages/profile_page.dart';
 import 'package:szewa/pages/social_page.dart';
 import 'package:szewa/pages/stats_page.dart';
 import 'package:szewa/pages/training_page.dart';
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 class RootPage extends StatefulWidget {
   const RootPage({Key key}) : super(key: key);
@@ -44,7 +45,7 @@ class _RootPageState extends State<RootPage> {
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.deepOrange,
+          selectedItemColor: colorTheme.ColorTheme.navbarSelectedItemColor,
           onTap: _onItemTapped,
           items: allDestinations.map((Destination destination) {
             return BottomNavigationBarItem(

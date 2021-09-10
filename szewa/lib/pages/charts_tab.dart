@@ -6,6 +6,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:szewa/managers/stats_calculator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:szewa/styles/text_theme.dart' as textTheme;
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 
 class ChartsTab extends StatefulWidget{
@@ -48,7 +50,7 @@ class _ChartsTabState  extends State<ChartsTab>{
             Text("Show from: "),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                primary: colorTheme.ColorTheme.chartsTabDateButtonColor,
               ),
               onPressed: () { DatePicker.showDatePicker(context,
                   showTitleActions: true,
@@ -63,11 +65,11 @@ class _ChartsTabState  extends State<ChartsTab>{
                     });
                   }, currentTime: _dateFrom, locale: LocaleType.en);
               },
-              child: Text(DateFormat('dd-MM-yyy').format(_dateFrom), style: TextStyle(color : Colors.black),)),
+              child: Text(DateFormat('dd-MM-yyy').format(_dateFrom), style: textTheme.TextTheme.chartsTabButtonText,)),
             Text(", to: "),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                primary: colorTheme.ColorTheme.chartsTabDateButtonColor,
               ),
               onPressed: () { DatePicker.showDatePicker(context,
                   showTitleActions: true,
@@ -82,7 +84,7 @@ class _ChartsTabState  extends State<ChartsTab>{
                     });
                   }, currentTime: _dateTo, locale: LocaleType.en);
               },
-              child: Text(DateFormat('dd-MM-yyyy').format(_dateTo), style: TextStyle(color : Colors.black),)),
+              child: Text(DateFormat('dd-MM-yyyy').format(_dateTo), style: textTheme.TextTheme.chartsTabButtonText,)),
           ],
         ),
           ],
@@ -93,7 +95,7 @@ class _ChartsTabState  extends State<ChartsTab>{
             elevation: 1,
             margin: EdgeInsets.all(10.0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            color: Colors.white,
+            color: colorTheme.ColorTheme.chartsTabCardColor,
             child: charts.TimeSeriesChart(
               [_activityData.activitySeries[0]],
               animate: true,
@@ -120,7 +122,7 @@ class _ChartsTabState  extends State<ChartsTab>{
           elevation: 1,
           margin: EdgeInsets.all(10.0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          color: Colors.white,
+          color: colorTheme.ColorTheme.chartsTabCardColor,
           child: Column(
             children: [
               Container(
@@ -132,25 +134,25 @@ class _ChartsTabState  extends State<ChartsTab>{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Only activities: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Only activities: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Sum calories: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Sum calories: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Sum distance km: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Sum distance km: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Sum duration: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Sum duration: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Avg duration: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Avg duration: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Avg distance km: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Avg distance km: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                         Padding(padding: EdgeInsets.all(4.0),
-                          child: Text("Number of activities: ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                          child: Text("Number of activities: ", style: textTheme.TextTheme.chartsTabStatsText,),
                         ),
                       ],
                     ),
@@ -169,27 +171,27 @@ class _ChartsTabState  extends State<ChartsTab>{
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text("${_activityData.sumCalories}", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text("${_activityData.sumCalories}", style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text((_activityData.sumDistance / 1000).toStringAsFixed(2), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text((_activityData.sumDistance / 1000).toStringAsFixed(2), style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text(Duration(seconds: _activityData.sumDuration).toString().split('.').first.padLeft(8, "0"), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text(Duration(seconds: _activityData.sumDuration).toString().split('.').first.padLeft(8, "0"), style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text(Duration(seconds: _activityData.avgDuration).toString().split('.').first.padLeft(8, "0"), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text(Duration(seconds: _activityData.avgDuration).toString().split('.').first.padLeft(8, "0"), style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text((_activityData.avgDistance / 1000).toStringAsFixed(2), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text((_activityData.avgDistance / 1000).toStringAsFixed(2), style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                         Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: Text("${_activityData.numberOfActivities}", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                          child: Text("${_activityData.numberOfActivities}", style: textTheme.TextTheme.chartsTabStatsValText,),
                         ),
                       ],
                     ),

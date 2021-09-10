@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:szewa/managers/connection_manager.dart';
 import 'package:szewa/managers/db_manager.dart';
 import '../navigation.dart';
+import 'package:szewa/styles/text_theme.dart' as textTheme;
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 class RegisterPage extends StatefulWidget{
   Function callback;
@@ -30,7 +32,7 @@ class _RegisterPageState  extends State<RegisterPage>{
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF00334E),
+        backgroundColor: colorTheme.ColorTheme.registerPageBackgroundColor,
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -42,13 +44,13 @@ class _RegisterPageState  extends State<RegisterPage>{
                   Container(
                     margin: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 40.0),
                     child: Center(
-                      child: Text("BECOME A SZEWA MEMBER", textAlign: TextAlign.center, style: TextStyle(fontSize: 35, color: Colors.white, fontWeight: FontWeight.w300,),),
+                      child: Text("BECOME A SZEWA MEMBER", textAlign: TextAlign.center, style: textTheme.TextTheme.RegisterPageMainText,),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
-                      style: getFieldTextStyle(),
+                      style: textTheme.TextTheme.registerFormFieldText,
                       decoration: getFieldDecorator("Mail"),
                       // The validator receives the text that the user has entered.
                       validator: (value) {
@@ -65,7 +67,7 @@ class _RegisterPageState  extends State<RegisterPage>{
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
-                      style: getFieldTextStyle(),
+                      style: textTheme.TextTheme.registerFormFieldText,
                       decoration: getFieldDecorator("Password"),
                       // The validator receives the text that the user has entered.
                       validator: (value) {
@@ -83,7 +85,7 @@ class _RegisterPageState  extends State<RegisterPage>{
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
-                      style: getFieldTextStyle(),
+                      style: textTheme.TextTheme.registerFormFieldText,
                       decoration: getFieldDecorator("Confirm password"),
                       // The validator receives the text that the user has entered.
                       validator: (value) {
@@ -101,12 +103,12 @@ class _RegisterPageState  extends State<RegisterPage>{
                   padding: EdgeInsets.all(10),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        foregroundColor: MaterialStateProperty.all<Color>(colorTheme.ColorTheme.registerFormButtonForegroundColor),
+                        backgroundColor: MaterialStateProperty.all<Color>(colorTheme.ColorTheme.registerFormButtonBackgroundColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.black)
+                              side: BorderSide(color: colorTheme.ColorTheme.registerFormButtonBorderColor)
                           ),
                         ),
                       ),
@@ -132,16 +134,16 @@ class _RegisterPageState  extends State<RegisterPage>{
                                 } else {
                                 widget.callback(NavigationStates.Login);
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Try again later'), backgroundColor: Colors.red,));
+                                    .showSnackBar(SnackBar(content: Text('Try again later'), backgroundColor: colorTheme.ColorTheme.snackBarBackgroundColor,));
                               }
                             } else {
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text('E-mail is in use'), backgroundColor: Colors.red,));
+                                  .showSnackBar(SnackBar(content: Text('E-mail is in use'), backgroundColor: colorTheme.ColorTheme.snackBarBackgroundColor,));
                             }
                           });
                         }
                       },
-                      child: Text('Join us', style: TextStyle(color: Color(0xFF00334E))),
+                      child: Text('Join us', style: textTheme.TextTheme.registerFormButtonText),
                     ),
                   ),
                   Padding(
@@ -149,11 +151,11 @@ class _RegisterPageState  extends State<RegisterPage>{
                     child: RichText(
                       text: TextSpan(
                         text: 'Already have an account? ',
-                        style: getFieldTextStyle(),
+                        style: textTheme.TextTheme.registerFormFieldText,
                         children: <TextSpan>[
                           TextSpan(
                             text: 'Sign in!',
-                            style: getLinkTextStyle(),
+                            style: textTheme.TextTheme.linkUnderlineText,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 widget.callback(NavigationStates.Login);
@@ -176,35 +178,25 @@ class _RegisterPageState  extends State<RegisterPage>{
     return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(mail);
   }
 
-  TextStyle getFieldTextStyle() {
-    return TextStyle(color: Colors.white,);
-  }
-
-  TextStyle getLinkTextStyle() {
-    return TextStyle(color: Colors.blue, decoration: TextDecoration.underline);
-  }
-
   InputDecoration getFieldDecorator(String labelText) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Color(0xFFFFFFFF), width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.registerFormEnabledBorder, width: 2),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Color(0xFFFFFFFF), width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.registerFormFocusedBorder, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Colors.red, width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.registerFormErrorBorder, width: 2),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Colors.red, width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.registerFormFocusedErrorBorder, width: 2),
       ),
-      labelStyle: TextStyle(
-        color: Color(0xFFFAFFFF),
-      ),
+      labelStyle: textTheme.TextTheme.registerFormFieldText,
       labelText: labelText,
     );
   }

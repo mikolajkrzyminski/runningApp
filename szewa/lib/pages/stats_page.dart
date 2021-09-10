@@ -3,6 +3,8 @@ import 'package:szewa/managers/db_manager.dart';
 import 'package:szewa/models/run_model.dart';
 import 'package:intl/intl.dart';
 import 'package:szewa/pages/charts_tab.dart';
+import 'package:szewa/styles/text_theme.dart' as textTheme;
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 class StatsPage extends StatefulWidget {
   @override
@@ -33,7 +35,7 @@ class _StatsPageState extends State<StatsPage> {
           return SizedBox(child: CircularProgressIndicator(),);
         }
         if (snapshot.hasError) {
-          return Text("error occurred", style : TextStyle(color: Colors.red));
+          return Text("error occurred", style : textTheme.TextTheme.statsPageSnapshotErrorText);
         }
         if (snapshot.hasData) {
           return DefaultTabController(
@@ -42,17 +44,17 @@ class _StatsPageState extends State<StatsPage> {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(kToolbarHeight),
                 child: Container(
-                  color: Colors.white,
+                  color: colorTheme.ColorTheme.statsPageTabColor,
                   child: SafeArea(
                     child: Column(
                       children: <Widget>[
                         Expanded(child: Container()),
                         TabBar(
                           indicatorWeight: 5,
-                          indicatorColor: Color(0xFFFED049),
+                          indicatorColor: colorTheme.ColorTheme.statsPageIndicatorColor,
                           tabs: [
-                            Tab(icon: Icon(Icons.directions_run, color: Color(0xFF00334E),)),
-                            Tab(icon: Icon(Icons.show_chart, color: Color(0xFF00334E),)),
+                            Tab(icon: Icon(Icons.directions_run, color: colorTheme.ColorTheme.statsPageTabIconColor,)),
+                            Tab(icon: Icon(Icons.show_chart, color: colorTheme.ColorTheme.statsPageTabIconColor,)),
                           ],
                         ),
                       ],
@@ -79,7 +81,7 @@ class _StatsPageState extends State<StatsPage> {
                                 child: Stack (
                                   children: [
                                     Center(
-                                      child: Text(getDayDescription((snapshot.data[index].dateTime)), style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                      child: Text(getDayDescription((snapshot.data[index].dateTime)), style: textTheme.TextTheme.statsPageCardTitleText),
                                     ),
                                     getIcon(snapshot.data[index].avgVelocity, ),
                                   ],
@@ -94,16 +96,16 @@ class _StatsPageState extends State<StatsPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(padding: EdgeInsets.all(4.0),
-                                          child: Text("Run ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                                          child: Text("Run ", style: textTheme.TextTheme.statsPageText,),
                                         ),
                                         Padding(padding: EdgeInsets.all(4.0),
-                                          child: Text("Distance ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                                          child: Text("Distance ", style: textTheme.TextTheme.statsPageText,),
                                         ),
                                         Padding(padding: EdgeInsets.all(4.0),
-                                          child: Text("Time ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                                          child: Text("Time ", style: textTheme.TextTheme.statsPageText,),
                                         ),
                                         Padding(padding: EdgeInsets.all(4.0),
-                                          child: Text("Avg Pace ", style: TextStyle(fontSize: 18, color: Color(0xFF969696), fontWeight: FontWeight.w300),),
+                                          child: Text("Avg Pace ", style: textTheme.TextTheme.statsPageText,),
                                         ),
                                       ],
                                     ),
@@ -112,22 +114,22 @@ class _StatsPageState extends State<StatsPage> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text("${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].dateTime))}r.", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                            child: Text("${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].dateTime))}r.", style: textTheme.TextTheme.statsPageValText,),
 
                                           ),
                                           Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text((snapshot.data[index].distance / 1000).toStringAsFixed(2) + " km", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                            child: Text((snapshot.data[index].distance / 1000).toStringAsFixed(2) + " km", style: textTheme.TextTheme.statsPageValText,),
 
                                           ),
                                           Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text("${timeFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].duration * 1000))}", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                            child: Text("${timeFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].duration * 1000))}", style: textTheme.TextTheme.statsPageValText,),
 
                                           ),
                                           Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text((0 == snapshot.data[index].avgVelocity ? 0 : (50 / 3) / snapshot.data[index].avgVelocity).toStringAsFixed(2) + " min/km", style: TextStyle(fontSize: 18, color: Color(0xFF003259), fontWeight: FontWeight.w500),),
+                                            child: Text((0 == snapshot.data[index].avgVelocity ? 0 : (50 / 3) / snapshot.data[index].avgVelocity).toStringAsFixed(2) + " min/km", style: textTheme.TextTheme.statsPageValText,),
                                           ),
                                         ]
                                     ),
@@ -165,11 +167,11 @@ class _StatsPageState extends State<StatsPage> {
   }
   Widget getIcon(double velocity) {
     if (velocity < 1.5) {
-      return Icon(Icons.directions_walk, color: Colors.green, );
+      return Icon(Icons.directions_walk, color: colorTheme.ColorTheme.statsPageSlowIconColor, );
     } else if (velocity < 5.5) {
-      return Icon(Icons.directions_run, color: Colors.orange, );
+      return Icon(Icons.directions_run, color: colorTheme.ColorTheme.statsPageMediumIconColor, );
     } else if (velocity >= 5.5) {
-      return Icon(Icons.directions_run, color: Colors.red, );
+      return Icon(Icons.directions_run, color: colorTheme.ColorTheme.statsPageFastIconColor, );
     }
   }
 

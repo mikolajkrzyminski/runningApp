@@ -10,6 +10,7 @@ import 'package:latlong/latlong.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:szewa/managers/stats_calculator.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:szewa/styles/color_theme.dart' as colorTheme;
 
 class TrainingPage extends StatefulWidget {
   Function callback;
@@ -75,7 +76,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                         Polyline(
                             points: _runPositions,
                             strokeWidth: 4.0,
-                            color: Colors.purple),
+                            color: colorTheme.ColorTheme.trainingPageRoadColor),
                       ],
                     ),
                   ],
@@ -96,7 +97,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                     return Visibility (
                       visible: !_isFollowing,
                       child: IconButton(
-                          icon: Icon(Icons.gps_fixed, color: Color(0xFF00334E), ),
+                          icon: Icon(Icons.gps_fixed, color: colorTheme.ColorTheme.trainingPageGpsFixIconColor, ),
                           onPressed: () {
                             setState(() {
                               if(_runPositions.isNotEmpty) _mapController.move(_runPositions[_runPositions.length - 1], _mapController.zoom);
@@ -126,11 +127,11 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                   // padding ustawia promien przycisku
                   shape: CircleBorder(),
                   padding: EdgeInsets.all(20),
-                  color: Color(0xFFFED049),
+                  color: colorTheme.ColorTheme.trainingPageStartButtonColor,
                   // if statement
                   child: Icon(
                     Icons.play_arrow,
-                    color: Colors.white,
+                    color: colorTheme.ColorTheme.trainingPageButtonIconPlayColor,
                     size: 40,
                   ),
                   onPressed: () {
@@ -151,10 +152,10 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                 child: MaterialButton(
                   shape: CircleBorder(),
                   padding: EdgeInsets.all(20),
-                  color: Color(0xFF00334E),
+                  color: colorTheme.ColorTheme.trainingPagePauseButtonColor,
                     child: Icon(
                       Icons.pause,
-                      color: Colors.white,
+                      color: colorTheme.ColorTheme.trainingPageButtonIconPauseColor,
                       size: 40,
                     ),
                   onPressed: () {
@@ -174,10 +175,10 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                   child: MaterialButton(
                     shape: CircleBorder(),
                     padding: EdgeInsets.all(20),
-                    color: Color(0xFF00334E),
+                    color: colorTheme.ColorTheme.trainingPageStopButtonColor,
                     child: Icon(
                       Icons.stop,
-                      color: Colors.white,
+                      color: colorTheme.ColorTheme.trainingPageButtonIconStopColor,
                       size: 40,
                     ),
                     onPressed: () {
@@ -216,10 +217,10 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                   child: MaterialButton(
                     shape: CircleBorder(),
                     padding: EdgeInsets.all(20),
-                    color: Color(0xFFFED049),
+                    color: colorTheme.ColorTheme.trainingPageStartButtonColor,
                     child: Icon(
                       Icons.play_arrow,
-                      color: Colors.white,
+                      color: colorTheme.ColorTheme.trainingPageButtonIconPlayColor,
                       size: 40,
                     ),
                     onPressed: () {

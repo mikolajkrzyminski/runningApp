@@ -35,7 +35,7 @@ class _LoginPageState  extends State<LoginPage>{
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF00334E),
+        backgroundColor: colorTheme.ColorTheme.loginPageBackgroundColor,
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -53,7 +53,7 @@ class _LoginPageState  extends State<LoginPage>{
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextFormField(
-                        style: textTheme.TextTheme.loginFormText,
+                        style: textTheme.TextTheme.loginFormFieldText,
                         decoration: getFieldDecorator("Mail"),
                         // The validator receives the text that the user has entered.
                         validator: (value) {
@@ -70,7 +70,7 @@ class _LoginPageState  extends State<LoginPage>{
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextFormField(
-                        style: textTheme.TextTheme.loginFormText,
+                        style: textTheme.TextTheme.loginFormFieldText,
                         decoration: getFieldDecorator("Password"),
                         // The validator receives the text that the user has entered.
                         validator: (value) {
@@ -94,7 +94,7 @@ class _LoginPageState  extends State<LoginPage>{
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: colorTheme.ColorTheme.loginFormButtonBorderColor)
+                                side: BorderSide(color: colorTheme.ColorTheme.loginFormButtonBorder)
                             ),
                           ),
                         ),
@@ -130,7 +130,7 @@ class _LoginPageState  extends State<LoginPage>{
                       child: RichText(
                         text: TextSpan(
                           text: 'Don\'t have account? ',
-                          style: textTheme.TextTheme.loginFormText,
+                          style: textTheme.TextTheme.loginFormFieldText,
                           children: <TextSpan>[
                             TextSpan(
                               text: 'Sign up!',
@@ -161,19 +161,19 @@ class _LoginPageState  extends State<LoginPage>{
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Color(0xFFFFFFFF), width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.loginFormEnabledBorder, width: 2),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Color(0xFFFFFFFF), width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.loginFormFocusedBorder, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Colors.red, width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.loginFormErrorBorder, width: 2),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Colors.red, width: 2),
+        borderSide: BorderSide(color: colorTheme.ColorTheme.loginFormFocusedErrorBorder, width: 2),
       ),
       labelStyle: textTheme.TextTheme.loginFormFieldText,
       labelText: labelText,
