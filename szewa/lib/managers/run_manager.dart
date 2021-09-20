@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 
 abstract class RunObserver {
-  void onRunChanged(Position position);
+  void onRunChanged(Position position, bool addPosition);
 }
 
 class RunManager {
@@ -105,9 +105,13 @@ class RunManager {
   }
 
   void _addPosition(Position position) {
-    _dbManager.addGeolocation(position, _runId);
+    bool addPosition = false;
+    if (_isRunning && !_isRunPaused) {
+      addPosition = true;
+      _dbManager.addGeolocation(position, _runId);
+    }
     if(null != _runObserver) {
-      _runObserver.onRunChanged(position);
+      _runObserver.onRunChanged(position, addPosition);
     }
     print("position has changed !Current: lat: ${position.latitude}, long: ${position.longitude}");
   }

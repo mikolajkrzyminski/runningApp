@@ -244,12 +244,14 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
   }
 
   @override
-  void onRunChanged(Position position) {
+  void onRunChanged(Position position, bool addPosition) {
     if (null != position) {
       setState(() {
         LatLng lastItem = LatLng(position.latitude, position.longitude);
-        _statsCalculator.updatePosition(lastItem);
-        _runPositions.add(lastItem);
+        if(addPosition) {
+          _statsCalculator.updatePosition(lastItem);
+          _runPositions.add(lastItem);
+        }
         if (_isFollowing) _mapController.move(lastItem, _mapController.zoom);
       });
     }
