@@ -260,7 +260,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
   }
 
   @override
-  void onRunChanged(Position position) {
+  void onRunChanged(Position position, bool addPosition) {
     if (null != position) {
       setState(() {
         _currPosition = LatLng(position.latitude, position.longitude);

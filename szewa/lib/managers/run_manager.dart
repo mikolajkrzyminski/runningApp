@@ -11,7 +11,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 
 abstract class RunObserver {
-  void onRunChanged(Position position);
+  void onRunChanged(Position position, bool addPosition);
 }
 
 class RunManager {
