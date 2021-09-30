@@ -41,7 +41,7 @@ dependencies:
   hex: ^0.2.0
   draw_graph: ^1.0.0
   location: ^4.2.0
-
+  connectivity_plus: ^1.1.0
 
 dev_dependencies:
   flutter_test:

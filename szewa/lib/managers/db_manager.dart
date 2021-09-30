@@ -147,6 +147,10 @@ class DbManager {
     );
   }
 
+  Future<void> updateActivity(int activityId, int serverId) async {
+    Database db = await _database;
+    db.rawQuery(RunModel.getUpdateString(activityId, serverId));
+  }
 
   Future<int> getMaxRunId() async {
     final Database db = await _database;
