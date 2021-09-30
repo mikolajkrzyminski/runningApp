@@ -32,7 +32,14 @@ class _StatsPageState extends State<StatsPage> {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return SizedBox(child: CircularProgressIndicator(),);
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator()
+              ],
+            ),
+          );
         }
         if (snapshot.hasError) {
           return Text("error occurred", style : textTheme.TextTheme.statsPageSnapshotErrorText);
@@ -68,7 +75,7 @@ class _StatsPageState extends State<StatsPage> {
                   itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () => print('tapped activity: ${dateFormat.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].dateTime))}'),
+                        onTap: () => print('tapped activity: ${null == snapshot.data[index].serverId ? "null" : snapshot.data[index].serverId}'),
                         child: Card(
                           margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           elevation: 1,

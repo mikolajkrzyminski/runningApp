@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:szewa/constants.dart';
 import 'package:szewa/managers/connection_manager.dart';
 import 'package:szewa/managers/location_service.dart';
 import 'db_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 
 abstract class RunObserver {
@@ -59,32 +62,47 @@ class RunManager {
     _dbManager.getMaxRunId().then((value) {
       if (value != null) _runId = value + 1;
       else _runId = 0;
-      _startStream();
-      //_startStreamNew();
     });
   }
 
-  void pauseRun() {
-    changeIsRunPaused();
-    _positionStream.cancel();
+  void pauseStream() {
+    _isRunPaused = true;
+    _positionStream.pause();
   }
 
-  void resumeRun() {
-    changeIsRunPaused();
-    _startStream();
+  void resumeStream() {
+    _isRunPaused = false;
+    _positionStream.resume();
+  }
+
+  void endStream() {
+    _positionStream.cancel();
   }
 
   Future<void> endRun(String description, double distance, double avgVelocity, int calories, int duration, Uint8List picture) async {
     _isRunning = !_isRunning;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    int serverRunId;
+    //_positionStream.cancel();
     _dbManager.addRun(_runId, _startTime, description, distance, avgVelocity, calories, duration, picture);
-    int serverRunId = await ConnectionManager().sendActivity(_runId);
-    if(null != serverRunId) ConnectionManager().sendPhoto(_runId, serverRunId);
-    _positionStream.cancel();
+    // check connection to network
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      FlutterSecureStorage storage = FlutterSecureStorage();
+      // user is logged
+      String emailStorage = await storage.read(key: Consts.emailStorageKey);
+      if (emailStorage != null) {
+        int serverRunId = await ConnectionManager().sendActivity(_runId);
+        if(null != serverRunId) {
+          await _dbManager.updateActivity(_runId, serverRunId);
+          ConnectionManager().sendPhoto(_runId, serverRunId);
+        }
+      }
+    }
     _runId = null;
     _dbManager.printRuns();
   }
 
-  Future<void> _startStreamOld() async{
+  Future<void> _startStreamOld() async {
     _positionStream = Geolocator
         .getPositionStream(
       desiredAccuracy : LocationAccuracy.best,
@@ -98,21 +116,19 @@ class RunManager {
     });
   }
 
-  Future<void> _startStream() async{
+  Future<void> startStream() async {
     _positionStream = LocationService().locationStream.listen((position) {
-      _addPosition(position);
+      if(null != _runObserver) {
+        _runObserver.onRunChanged(position);
+      }
+      if(_isRunning && !_isRunPaused) {
+        _addPosition(position);
+      }
     });
   }
 
   void _addPosition(Position position) {
-    bool addPosition = false;
-    if (_isRunning && !_isRunPaused) {
-      addPosition = true;
-      _dbManager.addGeolocation(position, _runId);
-    }
-    if(null != _runObserver) {
-      _runObserver.onRunChanged(position, addPosition);
-    }
+    _dbManager.addGeolocation(position, _runId);
     print("position has changed !Current: lat: ${position.latitude}, long: ${position.longitude}");
   }
 

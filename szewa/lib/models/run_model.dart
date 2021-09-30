@@ -10,6 +10,7 @@ class RunModel {
   static final String _fldCalories = "calories";
   static final String _fldDuration = "duration";
   static final String _fldPicture = "picture";
+  static final String _fldServerId = "serverId";
 
   static String tableName = 'runs';
   static String createStatement = 'CREATE TABLE $tableName '
@@ -21,7 +22,8 @@ class RunModel {
       '$_fldAvgVelocity DOUBLE, '
       '$_fldCalories INTEGER, '
       '$_fldDuration INTEGER, '
-      '$_fldPicture BLOB'
+      '$_fldPicture BLOB,'
+      '$_fldServerId INTEGER'
       ')';
 
   final int id;
@@ -32,6 +34,7 @@ class RunModel {
   final int calories;
   final int duration;
   final Uint8List picture;
+  final int serverId;
 
   RunModel({
     this.id,
@@ -42,6 +45,7 @@ class RunModel {
     this.calories,
     this.duration,
     this.picture,
+    this.serverId,
   });
 
   RunModel.fromMap(Map<String, dynamic> runMap) :
@@ -52,7 +56,8 @@ class RunModel {
         avgVelocity = runMap[_fldAvgVelocity],
         calories = runMap[_fldCalories],
         duration = runMap[_fldDuration],
-        picture = runMap[_fldPicture];
+        picture = runMap[_fldPicture],
+        serverId = runMap[_fldServerId];
 
   Map<String, dynamic> toMap() {
     return {
@@ -64,6 +69,7 @@ class RunModel {
       _fldCalories: calories,
       _fldDuration: duration,
       _fldPicture: picture,
+      _fldServerId: serverId,
     };
   }
 
@@ -77,13 +83,9 @@ class RunModel {
     };
   }
 
-  static String getUpdateString(int id, double distance, double avgVelocity, int calories, int duration, Uint8List picture) {
+  static String getUpdateString(int id, int serverId) {
     return 'UPDATE $tableName '
-        'SET $_fldDistance = $distance, '
-        '$_fldAvgVelocity = $avgVelocity, '
-        '$_fldCalories = $calories, '
-        '$_fldDuration = $duration, '
-        '$_fldPicture = $picture '
+        'SET $_fldServerId = $serverId '
         'WHERE $fldId = $id';
   }
 
@@ -108,7 +110,8 @@ class RunModel {
       avgVelocity: json[_fldAvgVelocity] as double,
       calories: json[_fldCalories] as int,
       duration: json["durationSeconds"] as int,
-      picture: picture
+      picture: picture,
+      serverId: json["id"] as int,
     );
   }
 

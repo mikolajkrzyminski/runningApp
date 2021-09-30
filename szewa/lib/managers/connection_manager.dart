@@ -8,12 +8,12 @@ import 'package:szewa/models/run_model.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ConnectionManager {
-  //singleton
+  // singleton
   static final _instance = ConnectionManager._connection();
   static final _cookieJsonKey = "set-cookie";
   static final _tokenJsonKey = "token";
   static final _emailJsonKey = "email";
-  static String _adress = 'http://178.183.128.112:7080';
+  static String _address = 'http://178.183.128.112:7080';
 
   factory ConnectionManager() {
     return _instance;
@@ -21,14 +21,23 @@ class ConnectionManager {
 
   FlutterSecureStorage _storage;
 
-  //constructor
+  // constructor
   ConnectionManager._connection() {
     _storage = FlutterSecureStorage();
   }
 
+ // todo
+  Future<http.Response> getPostResponse(String uri, Map<String, String> headers, Object body) {
+    return http.post(
+      Uri.parse(uri),
+      headers: headers,
+      body: body,
+    );
+  }
+
   Future<http.Response> createUser(String password, String email) {
     return http.post(
-      Uri.parse('$_adress/api/auth/signup'),
+      Uri.parse('$_address/api/auth/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -41,7 +50,7 @@ class ConnectionManager {
 
   Future<bool> authorizeUser(String password, String email) async {
     http.Response response = await http.post(
-      Uri.parse('$_adress/api/auth/signin'),
+      Uri.parse('$_address/api/auth/signin'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -52,6 +61,8 @@ class ConnectionManager {
     );
     if(200 == response.statusCode) {
       _setResponse(response);
+      // if email in storage then user is logged
+      _setEmail(email);
       return true;
     } else {
       return false;
@@ -63,19 +74,23 @@ class ConnectionManager {
     _storage.write(key: Consts.cookieStorageKey, value: response.headers[_cookieJsonKey]);
   }
 
+  Future<void> _setEmail(String email) async {
+    _storage.write(key: Consts.emailStorageKey, value: email);
+  }
+
   Future<bool> getIsLogged() {
     return _storage.read(key: Consts.jwtStorageKey).then((value) => value != null ? true : false);
   }
 
   Future<void> sendPhoto(int activityLocalId, int serverActivityId) async {
     RunModel activity = await DbManager().getRunById(activityLocalId);
-    //create multipart request for POST or PATCH method
+    // create multipart request for POST
     for(int i = 0; i < 2; i++) {
       String token = "Bearer ";
       var value = await _storage.read(key: Consts.jwtStorageKey);
       token += jsonDecode(value)[_tokenJsonKey];
       var request = http.MultipartRequest('POST',
-          Uri.parse(_adress + "/api/activity/$serverActivityId/add-picture"))
+          Uri.parse(_address + "/api/activity/$serverActivityId/add-picture"))
         ..files.add(http.MultipartFile(
             "picture",
             http.ByteStream.fromBytes(activity.picture),
@@ -102,14 +117,13 @@ class ConnectionManager {
     String token;
     String email;
     for(int i = 0; i < 2; i++) {
-      await _storage.read(key: Consts.jwtStorageKey).then((value) {
-        token = jsonDecode(value)[_tokenJsonKey];
-        email = jsonDecode(value)[_emailJsonKey];
-      });
+      String storageKey = await _storage.read(key: Consts.jwtStorageKey);
+      token = jsonDecode(storageKey)[_tokenJsonKey];
+      email = jsonDecode(storageKey)[_emailJsonKey];
       var activityJson = activity.toJson(email, geolocationsJson);
       var jsonBody = jsonEncode(activityJson);
       http.Response response = await http.post(
-        Uri.parse('$_adress/api/activity/new-activity'),
+        Uri.parse('$_address/api/activity/new-activity'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -129,7 +143,7 @@ class ConnectionManager {
         token = jsonDecode(value)[_tokenJsonKey];
       });
       http.Response response = await http.get(
-        Uri.parse('$_adress/api/activity/$runId/get-picture'),
+        Uri.parse('$_address/api/activity/$runId/get-picture'),
         headers: <String, String>{
           'Authorization': 'Bearer $token',
         },
@@ -147,7 +161,7 @@ class ConnectionManager {
         token = jsonDecode(value)[_tokenJsonKey];
       });
       http.Response response = await http.get(
-        Uri.parse('$_adress/api/activity/all-activities'),
+        Uri.parse('$_address/api/activity/all-activities'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -170,7 +184,7 @@ class ConnectionManager {
       cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
     http.Response response = await http.post(
-      Uri.parse('$_adress/api/auth/refresh-token'),
+      Uri.parse('$_address/api/auth/refresh-token'),
       headers: <String, String>{
         'cookie': cookie,
       },

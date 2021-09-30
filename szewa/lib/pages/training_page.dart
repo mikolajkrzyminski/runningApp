@@ -28,22 +28,26 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
   StatsCalculator _statsCalculator;
   final StopWatchTimer _stopwatchTimer = StopWatchTimer();
   ScreenshotController screenshotController;
+  LatLng _currPosition;
 
   @override
   void dispose() {
     super.dispose();
     _stopwatchTimer.dispose();
+    _runManager.endStream();
   }
 
   @override
   void initState() {
     super.initState();
+    _currPosition = LatLng(0, 0);
     _runManager = RunManager(this);
     _runPositions = [];
     _mapController = MapController();
     _isFollowing = true;
     _statsCalculator = StatsCalculator();
     screenshotController = ScreenshotController();
+    _runManager.startStream();
   }
 
   @override
@@ -63,7 +67,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                 child: FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
-                    center: LatLng(0, 0),
+                    center: _currPosition,
                     zoom: 16,
                   ),
                   layers: [
@@ -77,6 +81,18 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                             points: _runPositions,
                             strokeWidth: 4.0,
                             color: colorTheme.ColorTheme.trainingPageRoadColor),
+                      ],
+                    ),
+                    MarkerLayerOptions(
+                      markers: [
+                        Marker(
+                          width: 60.0,
+                          height: 60.0,
+                          point: _currPosition,
+                          builder: (ctx) => Container(
+                            child: Icon(_runManager.getIsRunPaused() ? Icons.radio_button_checked : Icons.directions_run),
+                          ),
+                        )
                       ],
                     ),
                   ],
@@ -163,7 +179,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                     setState(() {
                       _stopwatchTimer.onExecute.add(StopWatchExecute.stop);
                       _mapController.fitBounds(StatsCalculator.getSquare(_runPositions));
-                      _runManager.pauseRun();
+                      _runManager.pauseStream();
                     });
                   },
                 ),
@@ -199,7 +215,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                             _stopwatchTimer.onExecute.add(StopWatchExecute.reset);
                             _statsCalculator.clearStats();
                             _runPositions.clear();
-                            _runManager.changeIsRunPaused();
+                            _runManager.resumeStream();
                             widget.callback(true);
                           });
                         });
@@ -227,7 +243,7 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
                       setState(() {
                         //resume run
                         _stopwatchTimer.onExecute.add(StopWatchExecute.start);
-                        _runManager.resumeRun();
+                        _runManager.resumeStream();
                       });
                     },
                   ),
@@ -247,12 +263,12 @@ class _TrainingPageState extends State<TrainingPage> implements RunObserver {
   void onRunChanged(Position position, bool addPosition) {
     if (null != position) {
       setState(() {
-        LatLng lastItem = LatLng(position.latitude, position.longitude);
-        if(addPosition) {
-          _statsCalculator.updatePosition(lastItem);
-          _runPositions.add(lastItem);
+        _currPosition = LatLng(position.latitude, position.longitude);
+        if(_runManager.getIsRunning() && !_runManager.getIsRunPaused()) {
+          _statsCalculator.updatePosition(_currPosition);
+          _runPositions.add(_currPosition);
         }
-        if (_isFollowing) _mapController.move(lastItem, _mapController.zoom);
+        if (_isFollowing) _mapController.move(_currPosition, _mapController.zoom);
       });
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:szewa/pages/navigation.dart';
 import '../constants.dart';
@@ -28,9 +29,15 @@ class _StartAppManagerState extends State<StartAppManager>{
               default:
                 if (!snapshot.hasError) {
                   //check if app is start for the first time
-                  return snapshot.data.getBool(Consts.firstRunKey) != null
-                      ? Navigation(NavigationStates.RootPage)
-                      : Navigation(NavigationStates.StartUpManager);
+                  if (snapshot.data.getBool(Consts.firstRunKey) != null) {
+                    return Navigation(NavigationStates.RootPage);
+                  } else {
+                    // todo
+                    FlutterSecureStorage storage = FlutterSecureStorage();
+                    storage.deleteAll();
+                    return Navigation(NavigationStates.StartUpManager);
+                  }
+
                 } else {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
